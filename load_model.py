@@ -203,4 +203,4 @@ class DCGAN(nn.Module):
 
 
 """ Load GAN model and store into variable `gan`. Remove `map_location` to store model on CUDA device """
-gan = torch.load('DCGAN_embed_2.tch', map_location='cpu')
+# gan = torch.load('DCGAN_embed_2.tch', map_location='cpu')
