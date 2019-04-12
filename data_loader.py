@@ -9,22 +9,11 @@ from PIL import Image
 from build_vocab import Vocabulary
 import regex
 
-def clean_punctuation(line):
-        """ Returns a simplified version of a string s that uses non-smart quotes
-            and uniform-length hypens (from ASCII). Also removes non-printable
-            characters. """
-        line = line.replace('“', '"').replace('”', '"').replace("⠀", " ").replace("’", "'").replace("‘", "'").replace(
-            "…", "...")
-        line = regex.sub(r'\p{Pd}', '-', line)  # fix hyphens
-
-        return line
+START = "\\"
+END = "\n"
 
 def clean_caption(cap):
     """ Prepares a raw caption for input to the model. """
-    START = "\\"
-    END = "\n"
-    cap = clean_punctuation(cap)
-    cap = cap.replace("\n", "\t")
     cap = START + cap + END
     return cap
 
@@ -41,25 +30,13 @@ class InstgramDataset(data.Dataset):
             transform: image transformer.
         """
         with open(metadata_path, "rb") as md:
-            m = pickle.load(md)
-            self.captions = []
-            self.bad_captions = []
-            for i, d in enumerate(m):
-                try:
-                    cap = d["node"]["edge_media_to_caption"]["edges"][0]["node"]["text"]
-                except IndexError:
-                    self.bad_captions.append(i)
-                    cap = "Bad."
-                self.captions.append(clean_caption(cap))
-            m = None
+            self.captions = pickle.load(md)
         self.images = torch.load(images_path)
         self.vocab = vocab
         self.transform = transform
 
     def __getitem__(self, index):
         """Returns one data pair (image and caption)."""
-        while index in self.bad_captions:
-            index = np.random.randint(0, self.images.shape[0])
         caption_str = self.captions[index]
         image = self.images[index]
         if self.transform is not None:

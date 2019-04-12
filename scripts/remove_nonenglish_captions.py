@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 START = "\\"
+END = "\n"
 import torch
 import numpy as np
 
@@ -69,7 +70,7 @@ def clean_punctuation(l):
         characters. """
     l = l.replace('“', '"').replace('”', '"').replace("⠀", " ").replace("’", "'").replace("‘", "'").replace("…", "...")
     l = regex.sub(r'\p{Pd}', '-', l)  # fix hyphens
-    l = l.replace(START, "")
+    l = l.replace(START, "").replace("\n", "\t")
     return l
 
 
