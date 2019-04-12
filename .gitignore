@@ -1,0 +1,6 @@
+data/*
+*.tch
+models/*
+*.ckpt
+__pycache__/
+
