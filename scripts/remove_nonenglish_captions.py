@@ -1,18 +1,14 @@
 # -*- coding: utf-8 -*-
-START = "\\"
-import torch
-import numpy as np
 
-import sys
-import pickle
 import multiprocessing
+import pickle
+import re
+import string
+import sys
 
 import langdetect
-from glob import glob
-from multiprocessing import Pool
-import re
 import regex
-import string
+import torch
 from tqdm import tqdm
 
 try:
@@ -20,6 +16,9 @@ try:
 except:
     print("Usage: {0} $CaptionPickleFile $ImageTorchFile".format(sys.argv[0]))
     exit(0)
+
+START = "\\"
+END = "\n"
 
 ###############################################################
 ###                Text Processing Utilities                ###
@@ -69,7 +68,7 @@ def clean_punctuation(l):
         characters. """
     l = l.replace('“', '"').replace('”', '"').replace("⠀", " ").replace("’", "'").replace("‘", "'").replace("…", "...")
     l = regex.sub(r'\p{Pd}', '-', l)  # fix hyphens
-    l = l.replace(START, "")
+    l = l.replace(START, "").replace("\n", "\t")
     return l
 
 
