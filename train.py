@@ -54,7 +54,7 @@ def main(args):
             encoder_file = sorted(glob("models/encoder*.ckpt"))[-1]
             print("Loading", encoder_file)
             encoder.load_state_dict(torch.load(encoder_file))
-        decoder_file = sorted(glob("models/decod≤er*.ckpt"))[-1]
+        decoder_file = sorted(glob("models/decoder*.ckpt"))[-1]
         print("Loading", decoder_file)
         decoder.load_state_dict(torch.load(decoder_file))
         starting_i = int(decoder_file.split("-")[2][:-5])
