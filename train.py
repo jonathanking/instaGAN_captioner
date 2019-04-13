@@ -83,7 +83,7 @@ def main(args):
                 disc, features = gan.discriminator(images)
             else:
                 features = encoder(images)
-            outputs = decoder(features, captions, lengths)
+            outputs, unpacked_outputs = decoder(features, captions, lengths)
             loss = criterion(outputs, targets)
             decoder.zero_grad()
             if not args.gan_embedding:
