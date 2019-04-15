@@ -5,14 +5,16 @@ import numpy as np
 from glob import glob
 import os
 import pickle
-from data_loader import get_loader 
+from data_loader import get_loader
 from build_vocab import Vocabulary
-from model import EncoderCNN, DecoderRNN
+from model import EncoderCNN, DecoderRNN, DecoderRNNOld
 from torch.nn.utils.rnn import pack_padded_sequence
 from torchvision import transforms
-
+from numpy import random
 from load_model import DCGAN, Discriminator, Generator
 
+START = 0
+END = 1
 
 # Device configuration
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -21,7 +23,7 @@ def main(args):
     # Create model directory
     if not os.path.exists(args.model_path):
         os.makedirs(args.model_path)
-    
+
     # Image preprocessing, normalization for the pretrained resnet
     transform = transforms.Compose([
         # transforms.ToPILImage(),
@@ -31,23 +33,25 @@ def main(args):
         transforms.Normalize((0.485, 0.456, 0.406),
                              (0.229, 0.224, 0.225))])\
     # transform = None
-    
+
     # Load vocabulary wrapper
     with open(args.vocab_path, 'rb') as f:
         vocab = pickle.load(f)
-    
+
     # Build data loader
     data_loader = get_loader(args.caption_path, args.image_path,  vocab,
                              transform, args.batch_size,
-                             shuffle=True, num_workers=args.num_workers) 
+                             shuffle=True, num_workers=args.num_workers)
 
     # Build the models
     if not args.gan_embedding:
         encoder = EncoderCNN(args.embed_size).to(device)
     else:
-        gan = torch.load('DCGAN_embed_2.tch')
-    decoder = DecoderRNN(args.embed_size, args.hidden_size, len(vocab), args.num_layers).to(device)
+        gan = torch.load('DCGAN_embed_2.tch').to(device)
+    decoder = DecoderRNNOld(args.embed_size, args.hidden_size, len(vocab), args.num_layers, vocab).to(device)
+    # decoder = DecoderRNN(args.embed_size, args.hidden_size, len(vocab), args.num_layers).to(device)
 
+    starting_epoch, starting_i = 0, 0
     # Resume model training if requested
     if args.resume and len(glob("models/*.ckpt")) > 0:
         if not args.gan_embedding:
@@ -61,14 +65,14 @@ def main(args):
         starting_epoch = int(decoder_file.split("-")[1])
 
 
-    
+
     # Loss and optimizer
     criterion = nn.CrossEntropyLoss()
     params = list(decoder.parameters())
     if not args.gan_embedding:
         params += list(encoder.linear.parameters()) + list(encoder.bn.parameters())
     optimizer = torch.optim.Adam(params, lr=args.learning_rate)
-    
+
     # Train the models
     total_step = len(data_loader)
     for epoch in range(args.num_epochs):
@@ -77,13 +81,15 @@ def main(args):
             images = images.to(device)
             captions = captions.to(device)
             targets = pack_padded_sequence(captions, lengths, batch_first=True)[0]
-            
+
+            # loss = train_step(images, captions, gan.discriminator, decoder, optimizer, criterion)
+
             # Forward, backward and optimize
             if args.gan_embedding:
                 disc, features = gan.discriminator(images)
             else:
                 features = encoder(images)
-            outputs, unpacked_outputs = decoder(features, captions, lengths)
+            outputs = decoder(features, captions, lengths)
             loss = criterion(outputs, targets)
             decoder.zero_grad()
             if not args.gan_embedding:
@@ -94,14 +100,21 @@ def main(args):
             # Print log info
             if i % args.log_step == 0:
                 print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, Perplexity: {:5.4f}'
-                      .format(epoch, args.num_epochs, i, total_step, loss.item(), np.exp(loss.item()))) 
+                      .format(epoch, args.num_epochs, i, total_step, loss.item(), np.exp(loss.item())))
 
-            if i % args.print_cap_step == 0:
+            if i >= 1000 and i % args.print_cap_step == 0:
                 with torch.no_grad():
-                    sampled_ids = decoder.sample(features)
-                    sampled_ids = sampled_ids[0].cpu().numpy()
-                    print("Target caption:", get_caption_from_tensor(captions[0].cpu().numpy(), vocab))
-                    print("Predicted caption:", get_caption_from_tensor(sampled_ids, vocab))
+                    idx = 0
+                    tgt_caption = get_caption_from_tensor(captions[idx][:lengths[idx]].cpu().numpy(), vocab)
+                    pred_caption, ll = decoder.beam_search_decode(features[idx])
+                    print("Target caption:", tgt_caption)
+                    print("Predicted caption:", get_caption_from_tensor(pred_caption, vocab))
+                    print("log-likelihood:", ll.item() / len(pred_caption))
+
+                    # sampled_ids = decoder.sample(features)
+                    # sampled_ids = sampled_ids[0].cpu().numpy()
+                    # print("Target caption:", get_caption_from_tensor(captions[0].cpu().numpy(), vocab))
+                    # print("Predicted caption:", get_caption_from_tensor(sampled_ids, vocab))
             # Save the model checkpoints
             if (i+1) % args.save_step == 0:
                 torch.save(decoder.state_dict(), os.path.join(
@@ -110,8 +123,46 @@ def main(args):
                     torch.save(encoder.state_dict(), os.path.join(
                         args.model_path, 'encoder-{}-{}.ckpt'.format(starting_epoch + epoch +1, starting_i + i+1)))
 
+def train_step(input_tensor, target_tensor, encoder, decoder, optimizer, criterion, max_length=200):
+    """ Executes the encoding and decoding of the image. """
+    teacher_forcing_ratio = 0.5
+    target_length = target_tensor.size(0)
+    loss = 0
+
+    _, encoder_hidden = encoder(input_tensor) # aka embedded_img = encoder(images)
+
+    decoder_input = torch.zeros(1, 1, device='cuda', dtype=torch.long)
+
+    decoder_hidden = encoder_hidden
+
+    use_teacher_forcing = True if random.random() < teacher_forcing_ratio else False
+
+    if use_teacher_forcing:
+        # Teacher forcing: Feed the target as the next input
+        for di in range(target_length):
+            decoder_output, decoder_hidden = decoder(decoder_input, decoder_hidden)
+            loss += criterion(decoder_output, target_tensor[di])
+            decoder_input = target_tensor[di]  # Teacher forcing
+
+    else:
+        # Without teacher forcing: use its own predictions as the next input
+        for di in range(target_length):
+            decoder_output, decoder_hidden = decoder(decoder_input, decoder_hidden)
+            topv, topi = decoder_output.topk(1)
+            decoder_input = topi.squeeze().detach()  # detach from history as input
+
+            loss += criterion(decoder_output, target_tensor[di])
+            if decoder_input.item() == END:
+                break
+
+    loss.backward()
+
+    optimizer.step()
+
+    return loss.item() / target_length
+
+
 def get_caption_from_tensor(caption_tensor, vocab):
-    # caption_tensor = caption_tensor.numpy()
     caption = "".join(map(vocab.decode, caption_tensor))
     return caption
 
@@ -124,15 +175,15 @@ if __name__ == '__main__':
     parser.add_argument('--caption_path', type=str, default='data/train_meta_1_eng.pkl', help='path for train captions')
     parser.add_argument('--log_step', type=int , default=10, help='step size for prining log info')
     parser.add_argument('--save_step', type=int , default=1000, help='step size for saving trained models')
-    parser.add_argument('--print_cap_step', type=int, default=50, help='step size for printing captions')
+    parser.add_argument('--print_cap_step', type=int, default=200, help='step size for printing captions')
     parser.add_argument('--resume', action="store_true", help='resume model training from most recent checkpoint')
-    
+
     # Model parameters
     parser.add_argument('--embed_size', type=int , default=1024, help='dimension of word embedding vectors')
-    parser.add_argument('--hidden_size', type=int , default=512, help='dimension of lstm hidden states')
+    parser.add_argument('--hidden_size', type=int , default=1024, help='dimension of lstm hidden states')
     parser.add_argument('--num_layers', type=int , default=1, help='number of layers in lstm')
     parser.add_argument('--gan_embedding', action="store_true", help='use a trained GAN to provide image embeddings for the RNN. Use ResNet otherwise.')
-    
+
     parser.add_argument('--num_epochs', type=int, default=5)
     parser.add_argument('--batch_size', type=int, default=16)
     parser.add_argument('--num_workers', type=int, default=4)
