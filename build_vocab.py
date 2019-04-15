@@ -1,7 +1,8 @@
 import pickle
 import argparse
 
-START = "\\"
+START = "\\" # 0
+END = "\n"   # 1
 
 
 class Vocabulary(object):
@@ -10,6 +11,8 @@ class Vocabulary(object):
         self.char2idx = {}
         self.idx2char = {}
         self.idx = 0
+        self.add_word(START)
+        self.add_word(END)
 
     def add_word(self, word):
         if not word in self.char2idx:

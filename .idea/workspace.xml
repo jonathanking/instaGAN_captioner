@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a0bc144f-129d-4872-b337-e72b69cf33dc" name="Default" comment="">
+    <list default="true" id="a0bc144f-129d-4872-b337-e72b69cf33dc" name="Default" comment="Added gan_embedding argument to specify when the user would like to use&#10;the GAN's embeddings instead of those given by a pretrained ResNet.&#10;Also added functionality/argument to resume from most alphabetically&#10;recent checkpoint file.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build_vocab.py" beforeDir="false" afterPath="$PROJECT_DIR$/build_vocab.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/load_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/load_model.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/training_data.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/training_data.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/train.py" afterDir="false" />
@@ -18,10 +21,10 @@
     <SUITE FILE_PATH="coverage/instaGAN_captioner$Remove_Nonenglish.coverage" NAME="Remove Nonenglish Coverage Results" MODIFIED="1555092277823" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts" />
     <SUITE FILE_PATH="coverage/instaGAN_captioner$train.coverage" NAME="train Coverage Results" MODIFIED="1555094137115" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/instaGAN_captioner$train_resume_gan.coverage" NAME="train resume gan Coverage Results" MODIFIED="1555100165571" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/instaGAN_captioner$train_do_not_resume_gan.coverage" NAME="train do not resume gan Coverage Results" MODIFIED="1555101228812" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/instaGAN_captioner$train_do_not_resume_gan.coverage" NAME="train do not resume gan Coverage Results" MODIFIED="1555363881312" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.47749883">
+    <splitter split-orientation="horizontal" split-proportion="0.5585626">
       <split-first>
         <leaf>
           <file leaf-file-name="remove_nonenglish_captions.py" pinned="false" current-in-tab="false">
@@ -29,6 +32,19 @@
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="-1935">
                   <caret line="2" column="22" selection-start-line="2" selection-start-column="22" selection-end-line="2" selection-end-column="22" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="model.py" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/model.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="60">
+                  <caret line="148" column="96" selection-start-line="148" selection-start-column="96" selection-end-line="148" selection-end-column="96" />
+                  <folding>
+                    <element signature="e#0#12#0" expanded="true" />
+                    <element signature="e#1628#2291#0" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -42,26 +58,20 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="model.py" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/model.py">
+          <file leaf-file-name="functional.py" pinned="false" current-in-tab="false">
+            <entry file="file://$USER_HOME$/build/anaconda3/envs/pytorch_src2/lib/python3.6/site-packages/torch/nn/functional.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="601">
-                  <caret line="71" lean-forward="true" selection-start-line="71" selection-end-line="71" />
-                  <folding>
-                    <element signature="e#0#12#0" expanded="true" />
-                  </folding>
+                <state relative-caret-position="276">
+                  <caret line="1396" selection-start-line="1396" selection-end-line="1396" />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="train.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/train.py">
+          <file leaf-file-name="linear.py" pinned="false" current-in-tab="false">
+            <entry file="file://$USER_HOME$/build/anaconda3/envs/pytorch_src2/lib/python3.6/site-packages/torch/nn/modules/linear.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="304">
-                  <caret line="102" selection-start-line="102" selection-end-line="102" />
-                  <folding>
-                    <element signature="e#0#15#0" expanded="true" />
-                  </folding>
+                <state relative-caret-position="284">
+                  <caret line="66" selection-start-line="66" selection-end-line="66" />
                 </state>
               </provider>
             </entry>
@@ -115,8 +125,8 @@
           <file leaf-file-name="train.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/train.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="136">
-                  <caret line="87" column="31" lean-forward="true" selection-start-line="87" selection-start-column="31" selection-end-line="87" selection-end-column="31" />
+                <state relative-caret-position="1024">
+                  <caret line="106" column="37" lean-forward="true" selection-start-line="106" selection-start-column="37" selection-end-line="106" selection-end-column="37" />
                   <folding>
                     <element signature="e#0#15#0" expanded="true" />
                   </folding>
@@ -139,6 +149,7 @@
     <findStrings>
       <find>pad_pac</find>
       <find>encoder</find>
+      <find>lstm</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -183,16 +194,6 @@
             <path>
               <item name="instaGAN_captioner" type="b2602c69:ProjectViewProjectNode" />
               <item name="instaGAN_captioner" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="instaGAN_captioner" type="b2602c69:ProjectViewProjectNode" />
-              <item name="instaGAN_captioner" type="462c0819:PsiDirectoryNode" />
-              <item name="data" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="instaGAN_captioner" type="b2602c69:ProjectViewProjectNode" />
-              <item name="instaGAN_captioner" type="462c0819:PsiDirectoryNode" />
-              <item name="models" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="instaGAN_captioner" type="b2602c69:ProjectViewProjectNode" />
@@ -376,7 +377,7 @@
       <window_info anchor="bottom" id="Find" order="1" weight="0.32928804" />
       <window_info anchor="right" id="SciView" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.24110033" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.38754046" />
       <window_info id="Favorites" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -400,7 +401,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="2" />
+      <option name="time" value="9" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
@@ -441,13 +442,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/build/anaconda3/envs/pytorch_src2/lib/python3.6/site-packages/torch/nn/utils/rnn.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="508">
-          <caret line="241" selection-start-line="241" selection-end-line="241" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/load_model.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="982">
@@ -461,6 +455,27 @@
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file://$USER_HOME$/build/anaconda3/envs/pytorch_src2/lib/python3.6/site-packages/torch/nn/modules/linear.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="284">
+          <caret line="66" selection-start-line="66" selection-end-line="66" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/build/anaconda3/envs/pytorch_src2/lib/python3.6/site-packages/torch/nn/functional.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="276">
+          <caret line="1396" selection-start-line="1396" selection-end-line="1396" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/build/anaconda3/envs/pytorch_src2/lib/python3.6/site-packages/torch/nn/utils/rnn.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="508">
+          <caret line="241" selection-start-line="241" selection-end-line="241" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$USER_HOME$/build/anaconda3/envs/pytorch_src2/lib/python3.6/site-packages/torch/nn/modules/module.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="599">
@@ -468,22 +483,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/train.py">
+    <entry file="file://$PROJECT_DIR$/model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="102" selection-start-line="102" selection-end-line="102" />
+        <state relative-caret-position="60">
+          <caret line="148" column="96" selection-start-line="148" selection-start-column="96" selection-end-line="148" selection-end-column="96" />
           <folding>
-            <element signature="e#0#15#0" expanded="true" />
+            <element signature="e#0#12#0" expanded="true" />
+            <element signature="e#1628#2291#0" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model.py">
+    <entry file="file://$PROJECT_DIR$/train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="601">
-          <caret line="71" lean-forward="true" selection-start-line="71" selection-end-line="71" />
+        <state relative-caret-position="1024">
+          <caret line="106" column="37" lean-forward="true" selection-start-line="106" selection-start-column="37" selection-end-line="106" selection-end-column="37" />
           <folding>
-            <element signature="e#0#12#0" expanded="true" />
+            <element signature="e#0#15#0" expanded="true" />
           </folding>
         </state>
       </provider>
