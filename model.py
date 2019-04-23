@@ -7,6 +7,7 @@ from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence, Packed
 START = "\\"
 END = "\n"
 
+
 class EncoderRNN(nn.Module):
     def __init__(self, vocab_size, embed_size, hidden_size):
         """Represents a simple RNN for generating an embedding of the entire input sequence"""
@@ -57,6 +58,7 @@ class DecoderRNN(nn.Module):
 
     def initHidden(self):
         return torch.zeros(1, 1, self.hidden_size, device='cuda')
+
 
 class DecoderRNNOld(nn.Module):
     def __init__(self, embed_size, hidden_size, vocab_size, num_layers, vocab, max_seq_length=400):
@@ -118,7 +120,7 @@ class DecoderRNNOld(nn.Module):
         probabilities = F.softmax(self.output_layer.forward(new_hidden_state[-1]))
         return probabilities, new_hidden_state
 
-    def beam_search_decode(self, encodings, beam_width=4, max_length=150):
+    def beam_search_decode(self, encodings, beam_width=4, max_length=75):
         probs, prev_hs = self.decode(encodings.view(1,1,-1), torch.Tensor([self.vocab(START)]).cuda())
         first_model_state = (probs, prev_hs)
         candidate_translations = [([], 0, first_model_state)]

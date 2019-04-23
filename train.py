@@ -10,6 +10,7 @@ from build_vocab import Vocabulary
 from model import EncoderCNN, DecoderRNN, DecoderRNNOld
 from torch.nn.utils.rnn import pack_padded_sequence
 from torchvision import transforms
+import torchvision
 from numpy import random
 from load_model import DCGAN, Discriminator, Generator
 
@@ -102,14 +103,17 @@ def main(args):
                 print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, Perplexity: {:5.4f}'
                       .format(epoch, args.num_epochs, i, total_step, loss.item(), np.exp(loss.item())))
 
-            if i >= 1000 and i % args.print_cap_step == 0:
+            if i >= 2000 and i % args.print_cap_step == 0:
+            # if i >= 1000 and i % args.print_cap_step == 0:
                 with torch.no_grad():
+                    # for idx in range(args.batch_size):
                     idx = 0
                     tgt_caption = get_caption_from_tensor(captions[idx][:lengths[idx]].cpu().numpy(), vocab)
                     pred_caption, ll = decoder.beam_search_decode(features[idx])
                     print("Target caption:", tgt_caption)
                     print("Predicted caption:", get_caption_from_tensor(pred_caption, vocab))
                     print("log-likelihood:", ll.item() / len(pred_caption))
+                    torchvision.utils.save_image(images[idx], "images/i{0}_{1}.png".format(i, idx))
 
                     # sampled_ids = decoder.sample(features)
                     # sampled_ids = sampled_ids[0].cpu().numpy()
