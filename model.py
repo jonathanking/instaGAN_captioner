@@ -120,7 +120,24 @@ class DecoderRNNOld(nn.Module):
         probabilities = F.softmax(self.output_layer.forward(new_hidden_state[-1]))
         return probabilities, new_hidden_state
 
-    def beam_search_decode(self, encodings, beam_width=4, max_length=75):
+    def select_top_k(self, candidates, k):
+        """ Given a list of candidates, each a tuple of (sentence, log-likelihood, model-state), returns the top k
+            candidates according to length normalized log-likelihood. """
+        candidate_nlls = list(map(lambda x: x[1]/len(x[0]), candidates))
+        candidate_idxs = list(range(len(candidates)))
+        top_k_idxs = candidate_idxs[:k]
+        top_k_nlls = candidate_nlls[:k]
+        worst_val = min(top_k_nlls)
+        worst_idx = top_k_nlls.index(worst_val)
+        for i, cnll in enumerate(candidate_nlls[k:]):
+            if cnll > worst_val:
+                top_k_idxs[worst_idx] = i + k
+                top_k_nlls[worst_idx] = cnll
+                worst_val = min(top_k_nlls)
+                worst_idx = top_k_nlls.index(worst_val)
+        return [candidates[j] for j in top_k_idxs]
+
+    def beam_search_decode(self, encodings, beam_width=5, max_length=400):
         probs, prev_hs = self.decode(encodings.view(1,1,-1), torch.Tensor([self.vocab(START)]).cuda())
         first_model_state = (probs, prev_hs)
         candidate_translations = [([], 0, first_model_state)]
@@ -138,7 +155,7 @@ class DecoderRNNOld(nn.Module):
             return expanded_by_one
 
         def prune_candidates(expanded_candidates):
-            expanded_candidates = sorted(expanded_candidates, key=lambda e_ll_ms: e_ll_ms[1] / len(e_ll_ms[0]))
+            expanded_candidates = self.select_top_k(expanded_candidates, beam_width)
             expanded_candidates = expanded_candidates[-beam_width:]
             f = []
             for c, ll, ms in expanded_candidates:

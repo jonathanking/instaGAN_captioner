@@ -4,5 +4,5 @@ models/*
 *.ckpt
 __pycache__/
 scripts/.ipynb_checkpoints/
-
+images/*
 
