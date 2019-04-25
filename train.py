@@ -115,10 +115,6 @@ def main(args):
                     print("log-likelihood:", ll.item() / len(pred_caption))
                     torchvision.utils.save_image(images[idx], "images/i{0}_{1}.png".format(i, idx))
 
-                    # sampled_ids = decoder.sample(features)
-                    # sampled_ids = sampled_ids[0].cpu().numpy()
-                    # print("Target caption:", get_caption_from_tensor(captions[0].cpu().numpy(), vocab))
-                    # print("Predicted caption:", get_caption_from_tensor(sampled_ids, vocab))
             # Save the model checkpoints
             if (i+1) % args.save_step == 0:
                 torch.save(decoder.state_dict(), os.path.join(
