@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a0bc144f-129d-4872-b337-e72b69cf33dc" name="Default" comment="Remove old comments.">
+    <list default="true" id="a0bc144f-129d-4872-b337-e72b69cf33dc" name="Default" comment="Fix whitespace, saving string formatting.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_loader.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_loader.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/train.py" afterDir="false" />
     </list>
     <list id="5765aac3-ecdf-4631-9058-5f0e5c80cd29" name="idea" comment="idea" />
@@ -20,46 +20,94 @@
     <SUITE FILE_PATH="coverage/instaGAN_captioner$train_do_not_resume_gan.coverage" NAME="train do not resume gan Coverage Results" MODIFIED="1555430635481" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/model.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2025">
-              <caret line="139" column="69" selection-start-line="139" selection-start-column="69" selection-end-line="139" selection-end-column="69" />
-              <folding>
-                <element signature="e#0#12#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/150419.log">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/train.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="365">
-              <caret line="178" column="64" selection-start-line="178" selection-start-column="64" selection-end-line="178" selection-end-column="64" />
-              <folding>
-                <element signature="e#0#15#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sample.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="495">
-              <caret line="42" column="55" selection-start-line="42" selection-start-column="55" selection-end-line="42" selection-end-column="55" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <splitter split-orientation="horizontal" split-proportion="0.5">
+      <split-first>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/train.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="631">
+                  <caret line="191" selection-start-line="191" selection-end-line="191" />
+                  <folding>
+                    <element signature="e#0#15#0" expanded="true" />
+                    <element signature="e#771#1039#0" />
+                    <element signature="e#5264#6589#0" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/build_vocab.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="405">
+                  <caret line="27" column="22" selection-start-line="27" selection-start-column="22" selection-end-line="27" selection-end-column="22" />
+                  <folding>
+                    <element signature="e#0#13#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/150419.log">
+              <provider selected="true" editor-type-id="text-editor" />
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/data_loader.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="346">
+                  <caret line="110" selection-start-line="110" selection-end-line="110" />
+                  <folding>
+                    <element signature="e#0#12#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/sample.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="495">
+                  <caret line="42" column="55" selection-start-line="42" selection-start-column="55" selection-end-line="42" selection-end-column="55" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/data_loader.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="1143">
+                  <caret line="180" column="82" selection-start-line="180" selection-start-column="82" selection-end-line="180" selection-end-column="82" />
+                  <folding>
+                    <element signature="e#0#12#0" expanded="true" />
+                    <element signature="e#408#1528#0" />
+                    <element signature="e#2666#3839#0" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/model.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="1411">
+                  <caret line="139" column="69" selection-start-line="139" selection-start-column="69" selection-end-line="139" selection-end-column="69" />
+                  <folding>
+                    <element signature="e#0#12#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-second>
+    </splitter>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -76,21 +124,27 @@
       <find>START</find>
       <find>END</find>
       <find>words</find>
+      <find>train_ste</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/scripts/text_utils.py" />
-        <option value="$PROJECT_DIR$/data_loader.py" />
         <option value="$PROJECT_DIR$/scripts/remove_nonenglish_captions.py" />
         <option value="$PROJECT_DIR$/load_model.py" />
         <option value="$PROJECT_DIR$/build_vocab.py" />
         <option value="$PROJECT_DIR$/model.py" />
+        <option value="$PROJECT_DIR$/data_loader.py" />
         <option value="$PROJECT_DIR$/train.py" />
       </list>
     </option>
@@ -112,6 +166,11 @@
             <path>
               <item name="instaGAN_captioner" type="b2602c69:ProjectViewProjectNode" />
               <item name="instaGAN_captioner" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="instaGAN_captioner" type="b2602c69:ProjectViewProjectNode" />
+              <item name="instaGAN_captioner" type="462c0819:PsiDirectoryNode" />
+              <item name="data" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="instaGAN_captioner" type="b2602c69:ProjectViewProjectNode" />
@@ -286,7 +345,7 @@
       <workItem from="1555437252148" duration="1223000" />
       <workItem from="1555945628133" duration="53000" />
       <workItem from="1556048840734" duration="4472000" />
-      <workItem from="1556217953850" duration="1073000" />
+      <workItem from="1556217953850" duration="3947000" />
     </task>
     <task id="LOCAL-00001" summary="Added script to scrub non-english characters from training data.">
       <created>1555091913778</created>
@@ -358,21 +417,36 @@
       <option name="project" value="LOCAL" />
       <updated>1556217187214</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Change default caption printing, caption print length, and checkpoint&#10;naming convention.">
+      <created>1556219206744</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1556219206744</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Fix whitespace, saving string formatting.">
+      <created>1556219727347</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1556219727347</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="6821000" />
+    <option name="totallyTimeSpent" value="9695000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="849" y="24" width="2562" height="1393" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1272872" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32928804" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.375" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.13467743" />
       <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="4" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="5" />
@@ -380,7 +454,7 @@
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.32903227" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5003978" side_tool="true" weight="0.32983872" />
-      <window_info anchor="bottom" id="Version Control" order="10" />
+      <window_info anchor="bottom" id="Version Control" order="10" weight="0.32983872" />
       <window_info anchor="bottom" id="Python Console" order="11" weight="0.32983872" />
       <window_info anchor="bottom" id="Debug" order="12" sideWeight="0.49960223" weight="0.5177419" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -418,6 +492,16 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Added script to scrub non-english characters from training data." />
     <MESSAGE value="Modified data loading so that the only text processing done at runtime&#10;is adding START and END characters. All other text preprocessing is&#10;done ahead of time." />
@@ -427,12 +511,14 @@
     <MESSAGE value="Added code to save images while training." />
     <MESSAGE value="Changed prune candidates to select top k, instead of sorting." />
     <MESSAGE value="Remove old comments." />
-    <option name="LAST_COMMIT_MESSAGE" value="Remove old comments." />
+    <MESSAGE value="Change default caption printing, caption print length, and checkpoint&#10;naming convention." />
+    <MESSAGE value="Fix whitespace, saving string formatting." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix whitespace, saving string formatting." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/instaGAN_captioner$train_do_not_resume_gan.coverage" NAME="train do not resume gan Coverage Results" MODIFIED="1556215831714" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/instaGAN_captioner$train.coverage" NAME="train Coverage Results" MODIFIED="1556217597481" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/instaGAN_captioner$train_resume_cnn.coverage" NAME="train resume cnn Coverage Results" MODIFIED="1556219037654" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/instaGAN_captioner$train_resume_cnn.coverage" NAME="train resume cnn Coverage Results" MODIFIED="1556221881171" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/scripts/text_utils.py" />
@@ -481,26 +567,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/data_loader.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="16" selection-start-line="16" selection-end-line="16" />
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build_vocab.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="27" column="22" selection-start-line="27" selection-start-column="22" selection-end-line="27" selection-end-column="22" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/images/image_i600_10.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
@@ -521,16 +587,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2025">
-          <caret line="139" column="69" selection-start-line="139" selection-start-column="69" selection-end-line="139" selection-end-column="69" />
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/150419.log">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -541,12 +597,51 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/data/captions_en5_preprocessed.txt">
+      <provider selected="true" editor-type-id="LargeFileEditor">
+        <state relative-caret-position="150">
+          <caret line="4" column="302" selection-start-line="4" selection-start-column="302" selection-end-line="4" selection-end-column="302" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data_loader.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="346">
+          <caret line="110" selection-start-line="110" selection-end-line="110" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1411">
+          <caret line="139" column="69" selection-start-line="139" selection-start-column="69" selection-end-line="139" selection-end-column="69" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build_vocab.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="27" column="22" selection-start-line="27" selection-start-column="22" selection-end-line="27" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="365">
-          <caret line="178" column="64" selection-start-line="178" selection-start-column="64" selection-end-line="178" selection-end-column="64" />
+        <state relative-caret-position="631">
+          <caret line="191" selection-start-line="191" selection-end-line="191" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
+            <element signature="e#771#1039#0" />
+            <element signature="e#5264#6589#0" />
           </folding>
         </state>
       </provider>
