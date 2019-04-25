@@ -12,10 +12,12 @@ import regex
 START = "\\"
 END = "\n"
 
+
 def add_START_END(cap):
     """ Prepares a raw caption for input to the model. """
     cap = START + cap + END
     return cap
+
 
 class InstgramDataset(data.Dataset):
     """Instagram Custom Dataset compatible with torch.utils.data.DataLoader."""
@@ -153,6 +155,7 @@ def collate_fn_captions(data):
         end = lengths[i]
         captions_tgt_mrg[i, :end] = cap[:end]
     return captions_src_mrg, captions_tgt_mrg, lengths
+
 
 def get_loader(metadata_path, images_path, vocab, transform, batch_size, shuffle, num_workers):
     """Returns torch.utils.data.DataLoader for custom coco dataset."""

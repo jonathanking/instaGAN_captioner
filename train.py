@@ -118,10 +118,10 @@ def main(args):
             # Save the model checkpoints
             if (i+1) % args.save_step == 0:
                 torch.save(decoder.state_dict(), os.path.join(
-                    args.model_path, 'decoder-{:08im}-{:08im}.ckpt'.format(starting_epoch + epoch +1, starting_i + i+1)))
+                    args.model_path, 'decoder-{:08}-{:08}.ckpt'.format(starting_epoch + epoch +1, starting_i + i+1)))
                 if not args.gan_embedding:
                     torch.save(encoder.state_dict(), os.path.join(
-                        args.model_path, 'encoder-{:08im}-{:08im}.ckpt'.format(starting_epoch + epoch +1, starting_i + i+1)))
+                        args.model_path, 'encoder-{:08}-{:08}.ckpt'.format(starting_epoch + epoch +1, starting_i + i+1)))
 
 
 def train_step(input_tensor, target_tensor, encoder, decoder, optimizer, criterion, max_length=200):
