@@ -137,7 +137,7 @@ class DecoderRNNOld(nn.Module):
                 worst_idx = top_k_nlls.index(worst_val)
         return [candidates[j] for j in top_k_idxs]
 
-    def beam_search_decode(self, encodings, beam_width=5, max_length=400):
+    def beam_search_decode(self, encodings, beam_width=5, max_length=100):
         probs, prev_hs = self.decode(encodings.view(1,1,-1), torch.Tensor([self.vocab(START)]).cuda())
         first_model_state = (probs, prev_hs)
         candidate_translations = [([], 0, first_model_state)]

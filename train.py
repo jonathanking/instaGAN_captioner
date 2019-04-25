@@ -118,10 +118,11 @@ def main(args):
             # Save the model checkpoints
             if (i+1) % args.save_step == 0:
                 torch.save(decoder.state_dict(), os.path.join(
-                    args.model_path, 'decoder-{}-{}.ckpt'.format(starting_epoch + epoch +1, starting_i + i+1)))
+                    args.model_path, 'decoder-{:08im}-{:08im}.ckpt'.format(starting_epoch + epoch +1, starting_i + i+1)))
                 if not args.gan_embedding:
                     torch.save(encoder.state_dict(), os.path.join(
-                        args.model_path, 'encoder-{}-{}.ckpt'.format(starting_epoch + epoch +1, starting_i + i+1)))
+                        args.model_path, 'encoder-{:08im}-{:08im}.ckpt'.format(starting_epoch + epoch +1, starting_i + i+1)))
+
 
 def train_step(input_tensor, target_tensor, encoder, decoder, optimizer, criterion, max_length=200):
     """ Executes the encoding and decoding of the image. """
@@ -175,7 +176,7 @@ if __name__ == '__main__':
     parser.add_argument('--caption_path', type=str, default='data/train_meta_1_eng.pkl', help='path for train captions')
     parser.add_argument('--log_step', type=int , default=10, help='step size for prining log info')
     parser.add_argument('--save_step', type=int , default=1000, help='step size for saving trained models')
-    parser.add_argument('--print_cap_step', type=int, default=200, help='step size for printing captions')
+    parser.add_argument('--print_cap_step', type=int, default=1000, help='step size for printing captions')
     parser.add_argument('--resume', action="store_true", help='resume model training from most recent checkpoint')
 
     # Model parameters
