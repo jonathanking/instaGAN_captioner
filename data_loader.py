@@ -56,7 +56,7 @@ class InstgramDataset(data.Dataset):
 class CaptionDataset(data.Dataset):
     """Instagram Caption Dataset compatible with torch.utils.data.DataLoader."""
 
-    def __init__(self, root, vocab, seq_len=75, from_file=False):
+    def __init__(self, root, vocab, seq_len, from_file=False):
         """Set the path for images, captions and vocabulary wrapper.
 
         Args:

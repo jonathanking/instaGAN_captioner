@@ -139,7 +139,7 @@ def end_of_epoch_cleanup(i, epoch, total_step, loss, tgt_data, vocab, encoder, d
               .format(epoch, args.num_epochs, i, total_step, loss.item(), np.exp(loss.item())))
         logger.writerow([epoch, i, loss.item(), np.exp(loss.item())])
 
-    if (epoch == 0 and i >= 4000 and i % args.print_cap_step == 0) or (epoch > 0 and i % args.print_cap_step == 0):
+    if (epoch == 0 and i >= 0 and i % args.print_cap_step == 0) or (epoch > 0 and i % args.print_cap_step == 0):
         with torch.no_grad():
             idx = 0
             tgt_caption = get_caption_from_tensor(tgt_data[idx][:lengths[idx]].cpu().numpy(), vocab)
@@ -158,7 +158,7 @@ def end_of_epoch_cleanup(i, epoch, total_step, loss, tgt_data, vocab, encoder, d
             print("Temp = {0:4f}".format(t))
             print("log-likelihood:", ll.item() / len(pred_caption))
             if not args.pretrain_rnn:  # aka, 'if source is an image'
-                torchvision.utils.save_image(src_data[idx], "images/i{0}_{1}.png".format(i, idx))
+                torchvision.utils.save_image(src_data[idx], "images/{0}_{1}.png".format(epoch, i))
 
     # Save the model checkpoints
     if (i + 1) % args.save_step == 0:
@@ -187,7 +187,7 @@ if __name__ == '__main__':
     parser.add_argument('--caption_path', type=str, default='data/train_meta_1_eng.pkl', help='path for train captions')
     parser.add_argument('--log_step', type=int , default=10, help='step size for prining log info')
     parser.add_argument('--save_step', type=int , default=1000, help='step size for saving trained models')
-    parser.add_argument('--print_cap_step', type=int, default=200, help='step size for printing captions')
+    parser.add_argument('--print_cap_step', type=int, default=10, help='step size for printing captions')
     parser.add_argument('--resume', action="store_true", help='resume model training from most recent checkpoint')
     parser.add_argument('--pretrain_rnn', action="store_true",
                         help='train an rnn->rnn model to improve the decoderRNN\'s performance')
