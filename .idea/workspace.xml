@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a0bc144f-129d-4872-b337-e72b69cf33dc" name="Default" comment="Add argument to enable beam search if desired. Defaults to using &#10;multinomial decoding sampling.">
+    <list default="true" id="a0bc144f-129d-4872-b337-e72b69cf33dc" name="Default" comment="Remove extraneous default value.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/train.py" afterDir="false" />
     </list>
     <list id="5765aac3-ecdf-4631-9058-5f0e5c80cd29" name="idea" comment="idea" />
@@ -26,8 +25,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/train.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="888">
-                  <caret line="204" column="62" lean-forward="true" selection-start-line="204" selection-start-column="62" selection-end-line="204" selection-end-column="62" />
+                <state relative-caret-position="332">
+                  <caret line="83" column="81" selection-start-line="83" selection-start-column="81" selection-end-line="83" selection-end-column="81" />
                   <folding>
                     <element signature="e#0#15#0" expanded="true" />
                   </folding>
@@ -39,7 +38,7 @@
             <entry file="file://$PROJECT_DIR$/logs/model.train">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="75">
-                  <caret line="21" selection-start-line="21" selection-end-line="21" />
+                  <caret line="5" selection-start-line="5" selection-end-line="5" />
                 </state>
               </provider>
             </entry>
@@ -108,8 +107,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/data_loader.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-1407">
-                  <caret line="34" column="43" selection-start-line="34" selection-start-column="37" selection-end-line="34" selection-end-column="43" />
+                <state relative-caret-position="-358">
+                  <caret line="142" column="51" lean-forward="true" selection-start-line="142" selection-start-column="51" selection-end-line="142" selection-end-column="51" />
                   <folding>
                     <element signature="e#0#12#0" expanded="true" />
                   </folding>
@@ -180,8 +179,8 @@
         <option value="$PROJECT_DIR$/scripts/remove_nonenglish_captions.py" />
         <option value="$PROJECT_DIR$/load_model.py" />
         <option value="$PROJECT_DIR$/build_vocab.py" />
-        <option value="$PROJECT_DIR$/data_loader.py" />
         <option value="$PROJECT_DIR$/model.py" />
+        <option value="$PROJECT_DIR$/data_loader.py" />
         <option value="$PROJECT_DIR$/train.py" />
       </list>
     </option>
@@ -440,7 +439,7 @@
       <workItem from="1555437252148" duration="1223000" />
       <workItem from="1555945628133" duration="53000" />
       <workItem from="1556048840734" duration="4472000" />
-      <workItem from="1556217953850" duration="26362000" />
+      <workItem from="1556217953850" duration="26587000" />
     </task>
     <task id="LOCAL-00001" summary="Added script to scrub non-english characters from training data.">
       <created>1555091913778</created>
@@ -589,11 +588,25 @@
       <option name="project" value="LOCAL" />
       <updated>1556308616459</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="Delete unused code.">
+      <created>1556309096202</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1556309096202</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Remove extraneous default value.">
+      <created>1556309253935</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1556309253935</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="32110000" />
+    <option name="totallyTimeSpent" value="32335000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="849" y="24" width="2562" height="1393" extended-state="6" />
@@ -604,7 +617,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32928804" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.46048388" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.46048388" />
       <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="4" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="5" />
@@ -680,7 +693,9 @@
     <MESSAGE value="Added argument for num_layers in EncoderRNN." />
     <MESSAGE value="Alter beam_search_decode to add noise to decoding.&#10;Implement multinomial sampling based caption generation in &#10;generate_text." />
     <MESSAGE value="Add argument to enable beam search if desired. Defaults to using &#10;multinomial decoding sampling." />
-    <option name="LAST_COMMIT_MESSAGE" value="Add argument to enable beam search if desired. Defaults to using &#10;multinomial decoding sampling." />
+    <MESSAGE value="Delete unused code." />
+    <MESSAGE value="Remove extraneous default value." />
+    <option name="LAST_COMMIT_MESSAGE" value="Remove extraneous default value." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -698,7 +713,7 @@
     <SUITE FILE_PATH="coverage/instaGAN_captioner$pretrain_rnn.coverage" NAME="pretrain rnn Coverage Results" MODIFIED="1556298664553" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/instaGAN_captioner$train.coverage" NAME="train Coverage Results" MODIFIED="1556299895642" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/instaGAN_captioner$pretrain_rnn_resume.coverage" NAME="pretrain rnn resume Coverage Results" MODIFIED="1556305732822" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/instaGAN_captioner$train_resume_cnn.coverage" NAME="train resume cnn Coverage Results" MODIFIED="1556307887826" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/instaGAN_captioner$train_resume_cnn.coverage" NAME="train resume cnn Coverage Results" MODIFIED="1556309170959" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/scripts/text_utils.py" />
@@ -815,7 +830,7 @@
     <entry file="file://$PROJECT_DIR$/logs/model.train">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
-          <caret line="21" selection-start-line="21" selection-end-line="21" />
+          <caret line="5" selection-start-line="5" selection-end-line="5" />
         </state>
       </provider>
     </entry>
@@ -854,8 +869,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="888">
-          <caret line="204" column="62" lean-forward="true" selection-start-line="204" selection-start-column="62" selection-end-line="204" selection-end-column="62" />
+        <state relative-caret-position="332">
+          <caret line="83" column="81" selection-start-line="83" selection-start-column="81" selection-end-line="83" selection-end-column="81" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>

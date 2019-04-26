@@ -81,7 +81,7 @@ def main():
     # Build data loader
     if args.pretrain_rnn:
         data_loader = get_caption_loader(args.pretrain_caption_path, vocab, args.batch_size, shuffle=True,
-                                         num_workers=args.num_workers)
+                                         num_workers=args.num_workers, seq_len=75)
     else:
         data_loader = get_loader(args.caption_path, args.image_path,  vocab, transform, args.batch_size, shuffle=True,
                                  num_workers=args.num_workers)
