@@ -3,6 +3,7 @@ import torch.nn as nn
 import torchvision.models as models
 import torch.nn.functional as F
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence, PackedSequence
+import numpy as np
 
 START = "\\"
 END = "\n"
@@ -139,17 +140,24 @@ class DecoderRNNOld(nn.Module):
                 worst_idx = top_k_nlls.index(worst_val)
         return [candidates[j] for j in top_k_idxs]
 
-    def beam_search_decode(self, encodings, beam_width=4, max_length=150, starting_char=None):
+    def beam_search_decode(self, encodings, beam_width=4, max_length=150, starting_char=None, randomize_prob=False):
         if not starting_char:
             starting_char = self.vocab(START)
         zero_state = torch.zeros(self.num_layers, 1, self.hidden_size, device="cuda")
         outputs, prev_hs = self.gru.forward(encodings.view(1,1,-1), zero_state)
-        # probs = F.softmax(self.output_layer.forward(prev_hs[-1]))
-        # probs, prev_hs = self.decode(zero_state, torch.Tensor([self.vocab(START)]).cuda())
         probs, prev_hs = self.decode(prev_hs, torch.Tensor([starting_char]).cuda())
         first_model_state = (probs, prev_hs)
         candidate_translations = [([], 0, first_model_state)]
         final_candidate_translations = []
+
+        def add_noise(p):
+            """ Adds Gaussian noise to the probability to diversify outputs."""
+            random_prob = p - np.random.normal(0, 0.001)
+            if random_prob > 1:
+                random_prob = torch.tensor(1, dtype=torch.float, device="cuda")
+            elif random_prob < 0:
+                random_prob = torch.tensor(0, dtype=torch.float, device="cuda")
+            return random_prob
 
         def expand_candidates(candidates):
             expanded_by_one = []
@@ -157,16 +165,19 @@ class DecoderRNNOld(nn.Module):
                 probs, prev_hs = model_state
                 for candidate_word in range(1, self.vocab_size):
                     candidate_sentence = h + [candidate_word]
-                    new_ll = torch.log(probs[0][candidate_word])
+                    prob = probs[0][candidate_word]
+                    if randomize_prob:
+                        prob = add_noise(prob)
+                    new_ll = torch.log(prob)
                     ll = old_ll + new_ll
                     expanded_by_one.append((candidate_sentence, ll, model_state))
             return expanded_by_one
 
-        def prune_candidates(expanded_candidates):
-            expanded_candidates = self.select_top_k(expanded_candidates, beam_width)
-            expanded_candidates = expanded_candidates[-beam_width:]
+        def prune_candidates(candidates):
+            candidates = self.select_top_k(candidates, beam_width)
+            candidates = candidates[-beam_width:]
             f = []
-            for c, ll, ms in expanded_candidates:
+            for c, ll, ms in candidates:
                 probs, prev_hs = ms
                 probs, prev_hs = self.decode(prev_hs, torch.tensor(c[-1], dtype=torch.long, device='cuda'))
                 ms = probs, prev_hs
@@ -200,3 +211,50 @@ class DecoderRNNOld(nn.Module):
                 best_translation = ft
 
         return best_translation, best_ll
+
+
+def generate_text(decoder, encodings, vocab, starting_char=START, temp=1.4, decrease_temp=False):
+    """ Given a decoder and a tensor provided by the model's encoder representing the image or caption to generate
+        a caption from, this function users the decoder to sample from a multinomial distribution of next character
+        probabilities. """
+    # Number of characters to generate
+    num_generate = 1000
+    difference = temp - 1
+    if decrease_temp:
+        change = difference / num_generate
+    else:
+        change = 0
+
+    # Empty string to store our results
+    text_generated = []
+
+    # Low temperatures results in more predictable text.
+    # Higher temperatures results in more surprising text.
+    temperature = temp
+
+    # Initialize decoder with encodings
+    zero_state = torch.zeros(decoder.num_layers, 1, decoder.hidden_size, device="cuda")
+    outputs, prev_hs = decoder.gru.forward(encodings.view(1, 1, -1), zero_state)
+    probs, prev_hs = decoder.decode(prev_hs, torch.tensor([vocab(starting_char)], device="cuda"))
+
+    ll = torch.tensor(0, dtype=torch.float)
+
+    for i in range(num_generate):
+        # remove the batch dimension
+        probs = probs.squeeze()
+
+        # using a multinomial distribution to predict the word returned by the model
+        probs_temp = probs / temperature
+        char = torch.multinomial(probs_temp, 1)
+        ll += probs[char.item()]
+        temperature -= change
+
+        # We pass the predicted word as the next input to the model
+        # along with the previous hidden state
+        probs, prev_hs = decoder.decode(prev_hs, torch.tensor([char], device="cuda"))
+
+        text_generated.append(char.item())
+        if char.item() == vocab("\n"):
+            break
+
+    return text_generated, ll

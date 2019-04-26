@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a0bc144f-129d-4872-b337-e72b69cf33dc" name="Default" comment="Fix whitespace, saving string formatting.">
+    <list default="true" id="a0bc144f-129d-4872-b337-e72b69cf33dc" name="Default" comment="Added argument for num_layers in EncoderRNN.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/train.py" afterDir="false" />
     </list>
@@ -19,14 +20,14 @@
     <SUITE FILE_PATH="coverage/instaGAN_captioner$train_do_not_resume_gan.coverage" NAME="train do not resume gan Coverage Results" MODIFIED="1555430635481" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5">
+    <splitter split-orientation="horizontal" split-proportion="0.43299907">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/train.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1768">
-                  <caret line="155" column="45" selection-start-line="155" selection-start-column="45" selection-end-line="155" selection-end-column="45" />
+                <state relative-caret-position="393">
+                  <caret line="155" column="66" selection-start-line="155" selection-start-column="66" selection-end-line="155" selection-end-column="66" />
                   <folding>
                     <element signature="e#0#15#0" expanded="true" />
                     <element signature="e#7236#8561#0" />
@@ -36,46 +37,27 @@
             </entry>
           </file>
           <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/images/i0_0.png">
+              <provider selected="true" editor-type-id="images" />
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/logs/model.train">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="180">
-                  <caret line="9" column="22" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
+                <state relative-caret-position="75">
+                  <caret line="21" selection-start-line="21" selection-end-line="21" />
                 </state>
               </provider>
             </entry>
           </file>
           <file pinned="false" current-in-tab="false">
-            <entry file="file://$USER_HOME$/build/anaconda3/envs/pytorch_src2/lib/python3.6/multiprocessing/connection.py">
+            <entry file="file://$PROJECT_DIR$/model.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="259">
-                  <caret line="593" selection-start-line="593" selection-end-line="593" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$USER_HOME$/build/anaconda3/envs/pytorch_src2/lib/python3.6/site-packages/torch/nn/functional.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1339">
-                  <caret line="1498" selection-start-line="1498" selection-end-line="1498" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$USER_HOME$/build/anaconda3/envs/pytorch_src2/lib/python3.6/site-packages/torch/utils/data/dataloader.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="658">
-                  <caret line="630" selection-start-line="630" selection-end-line="630" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$USER_HOME$/build/anaconda3/envs/pytorch_src2/lib/python3.6/site-packages/torch/nn/modules/module.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="611">
-                  <caret line="491" selection-start-line="491" selection-end-line="491" />
+                <state relative-caret-position="31">
+                  <caret line="220" selection-start-line="220" selection-end-line="220" />
+                  <folding>
+                    <element signature="e#0#12#0" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -83,8 +65,8 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/build_vocab.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="405">
-                  <caret line="27" column="22" selection-start-line="27" selection-start-column="22" selection-end-line="27" selection-end-column="22" />
+                <state relative-caret-position="230">
+                  <caret line="31" selection-start-line="31" selection-end-line="31" />
                   <folding>
                     <element signature="e#0#13#0" expanded="true" />
                   </folding>
@@ -93,15 +75,10 @@
             </entry>
           </file>
           <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/150419.log">
-              <provider selected="true" editor-type-id="text-editor" />
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/data_loader.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="251">
-                  <caret line="65" selection-start-line="65" selection-end-line="65" />
+                <state relative-caret-position="461">
+                  <caret line="79" selection-start-line="79" selection-end-line="79" />
                   <folding>
                     <element signature="e#0#12#0" expanded="true" />
                   </folding>
@@ -123,9 +100,21 @@
       <split-second>
         <leaf>
           <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/model.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="105">
+                  <caret line="153" column="76" selection-start-line="153" selection-start-column="76" selection-end-line="153" selection-end-column="76" />
+                  <folding>
+                    <element signature="e#0#12#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/data_loader.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="268">
+                <state relative-caret-position="988">
                   <caret line="70" column="41" selection-start-line="70" selection-start-column="41" selection-end-line="70" selection-end-column="41" />
                   <folding>
                     <element signature="e#0#12#0" expanded="true" />
@@ -139,18 +128,6 @@
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="439">
                   <caret line="382" selection-start-line="382" selection-end-line="382" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/model.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="673">
-                  <caret line="145" column="8" selection-start-line="145" selection-start-column="8" selection-end-line="145" selection-end-column="8" />
-                  <folding>
-                    <element signature="e#0#12#0" expanded="true" />
-                  </folding>
                 </state>
               </provider>
             </entry>
@@ -184,10 +161,13 @@
       <find>END</find>
       <find>words</find>
       <find>train_ste</find>
-      <find>add_star</find>
       <find>hidden_size</find>
-      <find>embed_size</find>
       <find>long</find>
+      <find>embed_size</find>
+      <find>expanded_candidates</find>
+      <find>add_star</find>
+      <find>embedding</find>
+      <find>embed</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -207,8 +187,8 @@
         <option value="$PROJECT_DIR$/load_model.py" />
         <option value="$PROJECT_DIR$/build_vocab.py" />
         <option value="$PROJECT_DIR$/data_loader.py" />
-        <option value="$PROJECT_DIR$/model.py" />
         <option value="$PROJECT_DIR$/train.py" />
+        <option value="$PROJECT_DIR$/model.py" />
       </list>
     </option>
   </component>
@@ -238,11 +218,6 @@
             <path>
               <item name="instaGAN_captioner" type="b2602c69:ProjectViewProjectNode" />
               <item name="instaGAN_captioner" type="462c0819:PsiDirectoryNode" />
-              <item name="images" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="instaGAN_captioner" type="b2602c69:ProjectViewProjectNode" />
-              <item name="instaGAN_captioner" type="462c0819:PsiDirectoryNode" />
               <item name="logs" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -266,7 +241,7 @@
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="vcs.Git" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -466,7 +441,7 @@
       <workItem from="1555437252148" duration="1223000" />
       <workItem from="1555945628133" duration="53000" />
       <workItem from="1556048840734" duration="4472000" />
-      <workItem from="1556217953850" duration="18166000" />
+      <workItem from="1556217953850" duration="25461000" />
     </task>
     <task id="LOCAL-00001" summary="Added script to scrub non-english characters from training data.">
       <created>1555091913778</created>
@@ -580,22 +555,43 @@
       <option name="project" value="LOCAL" />
       <updated>1556300504550</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="Refactoring.">
+      <created>1556300571402</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1556300571402</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Fixed beam_search_decode to first give decoder the encoded image/caption&#10;from the encoder. Then, it gives the decoder a starting character.">
+      <created>1556300713961</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1556300713961</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Added argument for num_layers in EncoderRNN.">
+      <created>1556300769938</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1556300769938</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="23914000" />
+    <option name="totallyTimeSpent" value="31209000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="849" y="24" width="2562" height="1393" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1272872" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1272872" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32928804" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.3548387" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.46048388" />
       <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="4" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="5" />
@@ -666,15 +662,23 @@
     <MESSAGE value="For caption only dataset, splits captions into &quot;ABCD&quot; -&gt; &quot;AB&quot; + &quot;CD&quot; &#10;instead of &quot;AB&quot; + &quot;BC&quot; +&quot;CD&quot;. Made seq len optional argument." />
     <MESSAGE value="Added simple write to logfile." />
     <MESSAGE value="Separated hidden state sizes." />
-    <option name="LAST_COMMIT_MESSAGE" value="Separated hidden state sizes." />
+    <MESSAGE value="Refactoring." />
+    <MESSAGE value="Fixed beam_search_decode to first give decoder the encoded image/caption&#10;from the encoder. Then, it gives the decoder a starting character." />
+    <MESSAGE value="Added argument for num_layers in EncoderRNN." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added argument for num_layers in EncoderRNN." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/model.py</url>
+          <line>176</line>
+          <option name="timeStamp" value="27" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/train.py</url>
-          <line>154</line>
-          <option name="timeStamp" value="23" />
+          <line>158</line>
+          <option name="timeStamp" value="29" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -683,8 +687,8 @@
     <SUITE FILE_PATH="coverage/instaGAN_captioner$train_do_not_resume_gan.coverage" NAME="train do not resume gan Coverage Results" MODIFIED="1556215831714" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/instaGAN_captioner$pretrain_rnn.coverage" NAME="pretrain rnn Coverage Results" MODIFIED="1556298664553" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/instaGAN_captioner$train.coverage" NAME="train Coverage Results" MODIFIED="1556299895642" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/instaGAN_captioner$pretrain_rnn_resume.coverage" NAME="pretrain rnn resume Coverage Results" MODIFIED="1556298995572" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/instaGAN_captioner$train_resume_cnn.coverage" NAME="train resume cnn Coverage Results" MODIFIED="1556300041980" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/instaGAN_captioner$pretrain_rnn_resume.coverage" NAME="pretrain rnn resume Coverage Results" MODIFIED="1556305732822" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/instaGAN_captioner$train_resume_cnn.coverage" NAME="train resume cnn Coverage Results" MODIFIED="1556307887826" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/scripts/text_utils.py" />
@@ -756,16 +760,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/build_vocab.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="27" column="22" selection-start-line="27" selection-start-column="22" selection-end-line="27" selection-end-column="22" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/build/anaconda3/envs/pytorch_src2/lib/python3.6/site-packages/torch/utils/data/dataloader.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="658">
@@ -808,27 +802,40 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model.py">
+    <entry file="file://$PROJECT_DIR$/logs/model.train">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="673">
-          <caret line="145" column="8" selection-start-line="145" selection-start-column="8" selection-end-line="145" selection-end-column="8" />
+        <state relative-caret-position="75">
+          <caret line="21" selection-start-line="21" selection-end-line="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/images/i0_0.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build_vocab.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="230">
+          <caret line="31" selection-start-line="31" selection-end-line="31" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data_loader.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="988">
+          <caret line="70" column="41" selection-start-line="70" selection-start-column="41" selection-end-line="70" selection-end-column="41" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/logs/model.train">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="9" column="22" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1768">
-          <caret line="155" column="45" selection-start-line="155" selection-start-column="45" selection-end-line="155" selection-end-column="45" />
+        <state relative-caret-position="393">
+          <caret line="155" column="66" selection-start-line="155" selection-start-column="66" selection-end-line="155" selection-end-column="66" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
             <element signature="e#7236#8561#0" />
@@ -836,10 +843,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/data_loader.py">
+    <entry file="file://$PROJECT_DIR$/model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="268">
-          <caret line="70" column="41" selection-start-line="70" selection-start-column="41" selection-end-line="70" selection-end-column="41" />
+        <state relative-caret-position="105">
+          <caret line="153" column="76" selection-start-line="153" selection-start-column="76" selection-end-line="153" selection-end-column="76" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
           </folding>
