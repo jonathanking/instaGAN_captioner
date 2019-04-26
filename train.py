@@ -38,15 +38,16 @@ def get_encoder_decoder(vocab):
 
 def load_model_weights(encoder, decoder):
     """ Loads weights for encoder and decoder. Also returns epoch and iteration to resume at."""
+    resume_path = "models/" + args.resume + "/"
     if args.pretrain_rnn:
-        encoder_file = sorted(glob("models/pretrain_rnn_encoder*.ckpt"))[-1]
+        encoder_file = sorted(glob(resume_path + "pretrain_rnn_encoder*.ckpt"))[-1]
         print("Loading", encoder_file)
         encoder.load_state_dict(torch.load(encoder_file))
-    elif not args.gan_embedding and len(glob("models/encoder*.ckpt")) > 0:
-        encoder_file = sorted(glob("models/encoder*.ckpt"))[-1]
+    elif not args.gan_embedding and len(glob(resume_path + "encoder*.ckpt")) > 0:
+        encoder_file = sorted(glob(resume_path + "encoder*.ckpt"))[-1]
         print("Loading", encoder_file)
         encoder.load_state_dict(torch.load(encoder_file))
-    decoder_file = sorted(glob("models/decoder*.ckpt"))[-1]
+    decoder_file = sorted(glob(resume_path + "decoder*.ckpt"))[-1]
     print("Loading", decoder_file)
     decoder.load_state_dict(torch.load(decoder_file))
     starting_i = int(decoder_file.split("-")[2][:-5])
@@ -68,6 +69,20 @@ def main():
     # Create model directory
     if not os.path.exists(args.model_path):
         os.makedirs(args.model_path)
+
+    # Initialize logging mechanisms
+    logdir = "logs/" + args.model_name + "/"
+    imgdir = logdir + "imgs/"
+    chkptdir = "models/" + args.model_name + "/"
+    os.makedirs(logdir, exist_ok=True)
+    os.makedirs(imgdir, exist_ok=True)
+    os.makedirs(chkptdir, exist_ok=True)
+    with open(logdir + args.model_name + ".args", "w") as f:
+        f.write(str(args) + "\n")
+    logfile = open(logdir + args.model_name + ".train", "w", 1)
+    logheader = "epoch,iter,loss,perplexity,pred_caption,targ_caption,caption_ll,caption_perplexity,temp\n"
+    logfile.write(logheader)
+    logger = csv.writer(logfile, quotechar='“', quoting=csv.QUOTE_NONNUMERIC)
 
     # Image preprocessing, normalization for the pretrained resnet
     transform = transforms.Compose([
@@ -91,16 +106,14 @@ def main():
 
     # Resume model training if requested
     starting_epoch, starting_i = 0, 0
-    if args.resume and len(glob("models/*.ckpt")) > 0:
+    if args.resume and len(glob("models/" + args.resume + "/" + "*.ckpt")) > 0:
         encoder, decoder, starting_epoch, starting_i = load_model_weights(encoder, decoder)
 
     # Loss and optimizer
     criterion = nn.CrossEntropyLoss()
     params = get_trainable_params(encoder, decoder)
     optimizer = torch.optim.Adam(params, lr=args.learning_rate)
-    logfile = open("logs/model.train", "w", 1)
-    logfile.write(str(args) + "\n")
-    logger = csv.writer(logfile)
+
 
     # Train the models
     total_step = len(data_loader)
@@ -126,18 +139,17 @@ def main():
             optimizer.step()
 
             end_of_epoch_cleanup(i, epoch, total_step, loss, tgt_data, vocab, encoder, decoder, starting_i,
-                                 starting_epoch, src_data, features, lengths, logger)
+                                 starting_epoch, src_data, features, lengths, logger, imgdir)
     logfile.close()
 
 
 def end_of_epoch_cleanup(i, epoch, total_step, loss, tgt_data, vocab, encoder, decoder, starting_i, starting_epoch,
-                         src_data, features, lengths, logger):
+                         src_data, features, lengths, logger, imgdir):
     """ Execute bookkeeping methods such as printing the current epoch loss, example captions, and saving checkpts. """
-    # Print log info
-    if i % args.log_step == 0:
-        print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, Perplexity: {:5.4f}'
-              .format(epoch, args.num_epochs, i, total_step, loss.item(), np.exp(loss.item())))
-        logger.writerow([epoch, i, loss.item(), np.exp(loss.item())])
+    pred_caption_str = ""
+    tgt_caption_str = ""
+    temp = 0
+    ll = 0
 
     if (epoch == 0 and i >= 0 and i % args.print_cap_step == 0) or (epoch > 0 and i % args.print_cap_step == 0):
         with torch.no_grad():
@@ -152,21 +164,30 @@ def end_of_epoch_cleanup(i, epoch, total_step, loss, tgt_data, vocab, encoder, d
                 pred_caption, ll = decoder.beam_search_decode(features[idx])
             elif not args.pretrain_rnn and not args.beam_search:
                 pred_caption, ll = generate_text(decoder, features[idx], vocab, temp=t)
-
-            print("Target caption:", tgt_caption.replace("\t", "<>"))
-            print("Predicted caption:", get_caption_from_tensor(pred_caption, vocab).replace("\t", "<>"))
+            pred_caption_str = get_caption_from_tensor(pred_caption, vocab).replace("\n", "")
+            tgt_caption_str = tgt_caption.strip().replace("\n", "")[1:]
+            ll = ll.item()
+            print("Target caption:", tgt_caption_str.strip())
+            print("Predicted caption:", pred_caption_str.strip())
             print("Temp = {0:4f}".format(t))
-            print("log-likelihood:", ll.item() / len(pred_caption))
+            print("log-likelihood:", ll / len(pred_caption))
             if not args.pretrain_rnn:  # aka, 'if source is an image'
-                torchvision.utils.save_image(src_data[idx], "images/{0}_{1}.png".format(epoch, i))
+                torchvision.utils.save_image(src_data[idx], imgdir + "{0}_{1}.png".format(epoch, i))
+
+    # Print log info
+    if i % args.log_step == 0:
+        print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, Perplexity: {:5.4f}'
+              .format(epoch, args.num_epochs, i, total_step, loss.item(), np.exp(loss.item())))
+        q = '“'
+        logger.writerow([epoch, i, loss.item(), np.exp(loss.item()), pred_caption_str, tgt_caption_str, ll, np.exp(ll), temp])
 
     # Save the model checkpoints
     if (i + 1) % args.save_step == 0:
         torch.save(decoder.state_dict(), os.path.join(
-            args.model_path, 'decoder-{:08}-{:08}.ckpt'.format(starting_epoch + epoch + 1, starting_i + i + 1)))
+            args.model_path, args.model_name, 'decoder-{:08}-{:08}.ckpt'.format(starting_epoch + epoch + 1, starting_i + i + 1)))
         if args.pretrain_rnn:
             torch.save(encoder.state_dict(), os.path.join(
-                args.model_path, 'pretrain_rnn_encoder-{:08}-{:08}.ckpt'.format(starting_epoch + epoch + 1, starting_i + i + 1)))
+                args.model_path, args.model_name, 'pretrain_rnn_encoder-{:08}-{:08}.ckpt'.format(starting_epoch + epoch + 1, starting_i + i + 1)))
         elif not args.gan_embedding:
             torch.save(encoder.state_dict(), os.path.join(
                 args.model_path, 'encoder-{:08}-{:08}.ckpt'.format(starting_epoch + epoch + 1, starting_i + i + 1)))
@@ -180,6 +201,7 @@ def get_caption_from_tensor(caption_tensor, vocab):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
+    parser.add_argument("--model_name", type=str, help="model's identifying name, for notekeeping", required=True)
     parser.add_argument('--model_path', type=str, default='models/' , help='path for saving trained models')
     parser.add_argument('--crop_size', type=int, default=224 , help='size for randomly cropping images')
     parser.add_argument('--vocab_path', type=str, default='data/vocab.pkl', help='path for vocabulary wrapper')
@@ -187,8 +209,8 @@ if __name__ == '__main__':
     parser.add_argument('--caption_path', type=str, default='data/train_meta_1_eng.pkl', help='path for train captions')
     parser.add_argument('--log_step', type=int , default=10, help='step size for prining log info')
     parser.add_argument('--save_step', type=int , default=1000, help='step size for saving trained models')
-    parser.add_argument('--print_cap_step', type=int, default=10, help='step size for printing captions')
-    parser.add_argument('--resume', action="store_true", help='resume model training from most recent checkpoint')
+    parser.add_argument('--print_cap_step', type=int, default=100, help='step size for printing captions')
+    parser.add_argument('--resume', type=str, help='resume model training from most recent checkpoint for this model name')
     parser.add_argument('--pretrain_rnn', action="store_true",
                         help='train an rnn->rnn model to improve the decoderRNN\'s performance')
     parser.add_argument('--pretrain_caption_path', type=str, default='data/captions_en5_preprocessed.pt',
@@ -197,8 +219,8 @@ if __name__ == '__main__':
                         help='use beam_search instead of multinomial sampling decoding')
 
     # Model parameters
-    parser.add_argument('--embed_size', type=int, default=1024, help='dimension of word embedding vectors')
-    parser.add_argument('--encoder_rnn_hidden_size', type=int, default=1024, help='dimension of encoder hidden states')
+    parser.add_argument('--embed_size', type=int, default=512, help='dimension of word embedding vectors')
+    parser.add_argument('--encoder_rnn_hidden_size', type=int, default=512, help='dimension of encoder hidden states')
     parser.add_argument('--decoder_rnn_hidden_size', type=int, default=512, help='dimension of decoder hidden states')
     parser.add_argument('--num_layers', type=int, default=4, help='number of layers in lstm')
     parser.add_argument('--gan_embedding', action="store_true",

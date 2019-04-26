@@ -73,6 +73,7 @@ class DecoderRNNOld(nn.Module):
         self.gru = nn.GRU(embed_size, hidden_size, num_layers, batch_first=True)
         self.output_layer = nn.Linear(hidden_size, vocab_size)
         self.max_seg_length = max_seq_length
+        # self.input_layer = nn.Linear()
         
     def forward(self, features, captions, lengths):
         """Decode image feature vectors and generates captions."""
@@ -248,7 +249,7 @@ def generate_text(decoder, encodings, vocab, starting_char=None, temp=1.4, decre
         # using a multinomial distribution to predict the word returned by the model
         probs_temp = probs / temperature
         char = torch.multinomial(probs_temp, 1)
-        ll += probs[char.item()]
+        ll += torch.log(probs[char.item()])
         temperature -= change
 
         # We pass the predicted word as the next input to the model
