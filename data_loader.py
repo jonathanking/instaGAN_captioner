@@ -68,13 +68,15 @@ class CaptionDataset(data.Dataset):
                 text = f.read()
             text_as_int = torch.tensor(np.array([vocab.char2idx[c] for c in text]))
         else:
-            text_as_int = torch.load(root[:-3] + "pt")
+            text_as_int = torch.load(root)
 
         self.captions = []
         self.targets = []
         for i in range(len(text_as_int) // seq_len - seq_len):
-            self.captions.append(text_as_int[i:i+seq_len])
-            self.targets.append(text_as_int[i + 1 : i + seq_len + 1])
+            start_idx = i * seq_len
+            end_idx = start_idx + seq_len
+            self.captions.append(text_as_int[start_idx:end_idx])
+            self.targets.append(text_as_int[start_idx + 1:end_idx + 1])
         self.root = root
         self.vocab = vocab
 
@@ -178,7 +180,7 @@ def get_loader(metadata_path, images_path, vocab, transform, batch_size, shuffle
     return data_loader
 
 
-def get_caption_loader(root, vocab, seq_len, batch_size, shuffle, num_workers):
+def get_caption_loader(root, vocab, batch_size, shuffle, num_workers, seq_len=100):
     """Returns torch.utils.data.DataLoader for custom coco dataset."""
     # COCO caption dataset
     insta = CaptionDataset(root=root,
