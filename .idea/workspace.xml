@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a0bc144f-129d-4872-b337-e72b69cf33dc" name="Default" comment="Fix whitespace, saving string formatting.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_loader.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_loader.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/train.py" afterDir="false" />
     </list>
@@ -27,7 +25,7 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/train.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1048">
+                <state relative-caret-position="1768">
                   <caret line="155" column="45" selection-start-line="155" selection-start-column="45" selection-end-line="155" selection-end-column="45" />
                   <folding>
                     <element signature="e#0#15#0" expanded="true" />
@@ -127,7 +125,7 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/data_loader.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-1307">
+                <state relative-caret-position="268">
                   <caret line="70" column="41" selection-start-line="70" selection-start-column="41" selection-end-line="70" selection-end-column="41" />
                   <folding>
                     <element signature="e#0#12#0" expanded="true" />
@@ -468,7 +466,7 @@
       <workItem from="1555437252148" duration="1223000" />
       <workItem from="1555945628133" duration="53000" />
       <workItem from="1556048840734" duration="4472000" />
-      <workItem from="1556217953850" duration="17914000" />
+      <workItem from="1556217953850" duration="18166000" />
     </task>
     <task id="LOCAL-00001" summary="Added script to scrub non-english characters from training data.">
       <created>1555091913778</created>
@@ -561,11 +559,32 @@
       <option name="project" value="LOCAL" />
       <updated>1556221948600</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="For caption only dataset, splits captions into &quot;ABCD&quot; -&gt; &quot;AB&quot; + &quot;CD&quot; &#10;instead of &quot;AB&quot; + &quot;BC&quot; +&quot;CD&quot;. Made seq len optional argument.">
+      <created>1556300404041</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1556300404041</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Added simple write to logfile.">
+      <created>1556300470143</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1556300470143</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Separated hidden state sizes.">
+      <created>1556300504550</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1556300504550</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="23662000" />
+    <option name="totallyTimeSpent" value="23914000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="849" y="24" width="2562" height="1393" extended-state="6" />
@@ -644,7 +663,10 @@
     <MESSAGE value="Change default caption printing, caption print length, and checkpoint&#10;naming convention." />
     <MESSAGE value="Fix whitespace, saving string formatting." />
     <MESSAGE value="Refactor main function to reduce size and enable easier swapping out of&#10;different encoders/decoders." />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor main function to reduce size and enable easier swapping out of&#10;different encoders/decoders." />
+    <MESSAGE value="For caption only dataset, splits captions into &quot;ABCD&quot; -&gt; &quot;AB&quot; + &quot;CD&quot; &#10;instead of &quot;AB&quot; + &quot;BC&quot; +&quot;CD&quot;. Made seq len optional argument." />
+    <MESSAGE value="Added simple write to logfile." />
+    <MESSAGE value="Separated hidden state sizes." />
+    <option name="LAST_COMMIT_MESSAGE" value="Separated hidden state sizes." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -805,7 +827,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1048">
+        <state relative-caret-position="1768">
           <caret line="155" column="45" selection-start-line="155" selection-start-column="45" selection-end-line="155" selection-end-column="45" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
@@ -816,7 +838,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/data_loader.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1307">
+        <state relative-caret-position="268">
           <caret line="70" column="41" selection-start-line="70" selection-start-column="41" selection-end-line="70" selection-end-column="41" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />

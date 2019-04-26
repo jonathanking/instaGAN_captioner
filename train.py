@@ -38,7 +38,11 @@ def get_encoder_decoder(vocab):
 
 def load_model_weights(encoder, decoder):
     """ Loads weights for encoder and decoder. Also returns epoch and iteration to resume at."""
-    if not args.gan_embedding and not args.pretrain_rnn:
+    if args.pretrain_rnn:
+        encoder_file = sorted(glob("models/pretrain_rnn_encoder*.ckpt"))[-1]
+        print("Loading", encoder_file)
+        encoder.load_state_dict(torch.load(encoder_file))
+    elif not args.gan_embedding and len(glob("models/encoder*.ckpt")) > 0:
         encoder_file = sorted(glob("models/encoder*.ckpt"))[-1]
         print("Loading", encoder_file)
         encoder.load_state_dict(torch.load(encoder_file))
@@ -50,6 +54,16 @@ def load_model_weights(encoder, decoder):
     return encoder, decoder, starting_epoch, starting_i
 
 
+def get_trainable_params(encoder, decoder):
+    """ Returns the parameters to train on based on the training configuration. """
+    params = list(decoder.parameters())
+    if args.pretrain_rnn:
+        params += list(encoder.parameters())
+    elif not args.gan_embedding:
+        params += list(encoder.linear.parameters()) + list(encoder.bn.parameters())
+    return params
+
+
 def main(args):
     # Create model directory
     if not os.path.exists(args.model_path):
@@ -57,10 +71,6 @@ def main(args):
 
     # Image preprocessing, normalization for the pretrained resnet
     transform = transforms.Compose([
-        # transforms.ToPILImage(),
-        # transforms.RandomCrop(args.crop_size),
-        # transforms.RandomHorizontalFlip(),
-        # transforms.ToTensor(),
         transforms.Normalize((0.485, 0.456, 0.406),
                              (0.229, 0.224, 0.225))])\
 
@@ -86,9 +96,7 @@ def main(args):
 
     # Loss and optimizer
     criterion = nn.CrossEntropyLoss()
-    params = list(decoder.parameters())
-    if not args.gan_embedding:
-        params += list(encoder.linear.parameters()) + list(encoder.bn.parameters())
+    params = get_trainable_params(encoder, decoder)
     optimizer = torch.optim.Adam(params, lr=args.learning_rate)
     logfile = open("logs/model.train", "w", 1)
     logfile.write(str(args) + "\n")
@@ -97,20 +105,21 @@ def main(args):
     # Train the models
     total_step = len(data_loader)
     for epoch in range(args.num_epochs):
-        for i, (images, captions, lengths) in enumerate(data_loader):
+        # src = {images, captions}, tgt = {captions, captions[1:]}
+        for i, (src_data, tgt_data, lengths) in enumerate(data_loader):
             # Set mini-batch dataset
-            images = images.to(device)
-            captions = captions.to(device)
-            targets = pack_padded_sequence(captions, lengths, batch_first=True)[0]
+            src_data = src_data.to(device)
+            tgt_data = tgt_data.to(device)
+            targets = pack_padded_sequence(tgt_data, lengths, batch_first=True)[0]
 
             # loss = train_step(images, captions, gan.discriminator, decoder, optimizer, criterion)
 
             # Forward, backward and optimize
             if args.gan_embedding:
-                disc, features = encoder(images)
+                disc, features = encoder(src_data)
             else:
-                features = encoder(images)
-            outputs = decoder(features, captions, lengths)
+                features = encoder(src_data)
+            outputs = decoder(features, tgt_data, lengths)
             loss = criterion(outputs, targets)
             decoder.zero_grad()
             if not args.gan_embedding:
@@ -118,12 +127,13 @@ def main(args):
             loss.backward()
             optimizer.step()
 
-            end_of_epoch_cleanup(i, epoch, total_step, loss, captions, vocab, encoder, decoder, starting_i,
-                                 starting_epoch, images, features, lengths)
+            end_of_epoch_cleanup(i, epoch, total_step, loss, tgt_data, vocab, encoder, decoder, starting_i,
+                                 starting_epoch, src_data, features, lengths, logger)
+    logfile.close()
 
 
-def end_of_epoch_cleanup(i, epoch, total_step, loss, captions, vocab, encoder, decoder, starting_i, starting_epoch,
-                         images, features, lengths):
+def end_of_epoch_cleanup(i, epoch, total_step, loss, tgt_data, vocab, encoder, decoder, starting_i, starting_epoch,
+                         src_data, features, lengths, logger):
     """ Execute bookkeeping methods such as printing the current epoch loss, example captions, and saving checkpts. """
     # Print log info
     if i % args.log_step == 0:
@@ -131,22 +141,29 @@ def end_of_epoch_cleanup(i, epoch, total_step, loss, captions, vocab, encoder, d
               .format(epoch, args.num_epochs, i, total_step, loss.item(), np.exp(loss.item())))
         logger.writerow([epoch, i, loss.item(), np.exp(loss.item())])
 
-    if (epoch == 0 and i >= 2000 and i % args.print_cap_step == 0) or (epoch > 0 and i % args.print_cap_step == 0):
+    if (epoch == 0 and i >= 4000 and i % args.print_cap_step == 0) or (epoch > 0 and i % args.print_cap_step == 0):
         with torch.no_grad():
             # for idx in range(args.batch_size):
             idx = 0
-            tgt_caption = get_caption_from_tensor(captions[idx][:lengths[idx]].cpu().numpy(), vocab)
-            pred_caption, ll = decoder.beam_search_decode(features[idx])
+            tgt_caption = get_caption_from_tensor(tgt_data[idx][:lengths[idx]].cpu().numpy(), vocab)
+            if args.pretrain_rnn:
+                pred_caption, ll = decoder.beam_search_decode(features[idx], starting_char=tgt_data[idx][0])
+            else:
+                pred_caption, ll = decoder.beam_search_decode(features[idx])
             print("Target caption:", tgt_caption)
             print("Predicted caption:", get_caption_from_tensor(pred_caption, vocab))
             print("log-likelihood:", ll.item() / len(pred_caption))
-            torchvision.utils.save_image(images[idx], "images/i{0}_{1}.png".format(i, idx))
+            if not args.pretrain_rnn:  # aka, 'if source is an image'
+                torchvision.utils.save_image(src_data[idx], "images/i{0}_{1}.png".format(i, idx))
 
     # Save the model checkpoints
     if (i + 1) % args.save_step == 0:
         torch.save(decoder.state_dict(), os.path.join(
             args.model_path, 'decoder-{:08}-{:08}.ckpt'.format(starting_epoch + epoch + 1, starting_i + i + 1)))
-        if not args.gan_embedding:
+        if args.pretrain_rnn:
+            torch.save(encoder.state_dict(), os.path.join(
+                args.model_path, 'pretrain_rnn_encoder-{:08}-{:08}.ckpt'.format(starting_epoch + epoch + 1, starting_i + i + 1)))
+        elif not args.gan_embedding:
             torch.save(encoder.state_dict(), os.path.join(
                 args.model_path, 'encoder-{:08}-{:08}.ckpt'.format(starting_epoch + epoch + 1, starting_i + i + 1)))
 
@@ -191,6 +208,7 @@ def train_step(input_tensor, target_tensor, encoder, decoder, optimizer, criteri
 
 
 def get_caption_from_tensor(caption_tensor, vocab):
+    """ Decodes a integer tensor caption using a defined vocabulary. """
     caption = "".join(map(vocab.decode, caption_tensor))
     return caption
 
@@ -204,11 +222,11 @@ if __name__ == '__main__':
     parser.add_argument('--caption_path', type=str, default='data/train_meta_1_eng.pkl', help='path for train captions')
     parser.add_argument('--log_step', type=int , default=10, help='step size for prining log info')
     parser.add_argument('--save_step', type=int , default=1000, help='step size for saving trained models')
-    parser.add_argument('--print_cap_step', type=int, default=1000, help='step size for printing captions')
+    parser.add_argument('--print_cap_step', type=int, default=200, help='step size for printing captions')
     parser.add_argument('--resume', action="store_true", help='resume model training from most recent checkpoint')
     parser.add_argument('--pretrain_rnn', action="store_true",
                         help='train an rnn->rnn model to improve the decoderRNN\'s performance')
-    parser.add_argument('--pretrain_caption_path', type=str, default='data/captions_en5_prerocessed.pt',
+    parser.add_argument('--pretrain_caption_path', type=str, default='data/captions_en5_preprocessed.pt',
                         help='integer preprocessed captions for pretraining the rnn decoder')
 
     # Model parameters
@@ -220,7 +238,7 @@ if __name__ == '__main__':
                         help='use a trained GAN to provide image embeddings for the RNN. Use ResNet otherwise.')
 
     parser.add_argument('--num_epochs', type=int, default=5)
-    parser.add_argument('--batch_size', type=int, default=16)
+    parser.add_argument('--batch_size', type=int, default=32)
     parser.add_argument('--num_workers', type=int, default=4)
     parser.add_argument('--learning_rate', type=float, default=0.001)
     args = parser.parse_args()
