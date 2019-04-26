@@ -25,14 +25,14 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 def get_encoder_decoder(vocab):
     """ Given the arguments, returns the correct combination of CNN/RNN/GAN encoders and decoders. """
     if args.pretrain_rnn:
-        encoder = EncoderRNN(len(vocab), args.embed_size, args.hidden_size)
+        encoder = EncoderRNN(len(vocab), args.embed_size, args.encoder_rnn_hidden_size).to(device)
     elif args.gan_embedding:
         gan = torch.load('DCGAN_embed_2.tch').to(device)
         encoder = gan.discriminator
     else:
         encoder = EncoderCNN(args.embed_size).to(device)
 
-    decoder = DecoderRNNOld(args.embed_size, args.hidden_size, len(vocab), args.num_layers, vocab).to(device)
+    decoder = DecoderRNNOld(args.embed_size, args.decoder_rnn_hidden_size, len(vocab), args.num_layers, vocab).to(device)
     return encoder, decoder
 
 
@@ -212,9 +212,10 @@ if __name__ == '__main__':
                         help='integer preprocessed captions for pretraining the rnn decoder')
 
     # Model parameters
-    parser.add_argument('--embed_size', type=int , default=1024, help='dimension of word embedding vectors')
-    parser.add_argument('--hidden_size', type=int , default=1024, help='dimension of lstm hidden states')
-    parser.add_argument('--num_layers', type=int , default=1, help='number of layers in lstm')
+    parser.add_argument('--embed_size', type=int, default=1024, help='dimension of word embedding vectors')
+    parser.add_argument('--encoder_rnn_hidden_size', type=int, default=1024, help='dimension of lstm hidden states')
+    parser.add_argument('--decoder_rnn_hidden_size', type=int, default=512, help='dimension of lstm hidden states')
+    parser.add_argument('--num_layers', type=int, default=4, help='number of layers in lstm')
     parser.add_argument('--gan_embedding', action="store_true",
                         help='use a trained GAN to provide image embeddings for the RNN. Use ResNet otherwise.')
 
