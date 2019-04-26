@@ -5,6 +5,7 @@ import numpy as np
 from glob import glob
 import os
 import pickle
+import csv
 from data_loader import get_loader, get_caption_loader
 from build_vocab import Vocabulary
 from model import EncoderRNN, EncoderCNN, DecoderRNN, DecoderRNNOld
@@ -89,6 +90,9 @@ def main(args):
     if not args.gan_embedding:
         params += list(encoder.linear.parameters()) + list(encoder.bn.parameters())
     optimizer = torch.optim.Adam(params, lr=args.learning_rate)
+    logfile = open("logs/model.train", "w", 1)
+    logfile.write(str(args) + "\n")
+    logger = csv.writer(logfile)
 
     # Train the models
     total_step = len(data_loader)
@@ -125,6 +129,7 @@ def end_of_epoch_cleanup(i, epoch, total_step, loss, captions, vocab, encoder, d
     if i % args.log_step == 0:
         print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, Perplexity: {:5.4f}'
               .format(epoch, args.num_epochs, i, total_step, loss.item(), np.exp(loss.item())))
+        logger.writerow([epoch, i, loss.item(), np.exp(loss.item())])
 
     if (epoch == 0 and i >= 2000 and i % args.print_cap_step == 0) or (epoch > 0 and i % args.print_cap_step == 0):
         with torch.no_grad():
