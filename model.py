@@ -213,10 +213,13 @@ class DecoderRNNOld(nn.Module):
         return best_translation, best_ll
 
 
-def generate_text(decoder, encodings, vocab, starting_char=START, temp=1.4, decrease_temp=False):
+def generate_text(decoder, encodings, vocab, starting_char=None, temp=1.4, decrease_temp=False):
     """ Given a decoder and a tensor provided by the model's encoder representing the image or caption to generate
         a caption from, this function users the decoder to sample from a multinomial distribution of next character
         probabilities. """
+    if not starting_char:
+        starting_char = vocab(START)
+
     # Number of characters to generate
     num_generate = 1000
     difference = temp - 1
@@ -235,7 +238,7 @@ def generate_text(decoder, encodings, vocab, starting_char=START, temp=1.4, decr
     # Initialize decoder with encodings
     zero_state = torch.zeros(decoder.num_layers, 1, decoder.hidden_size, device="cuda")
     outputs, prev_hs = decoder.gru.forward(encodings.view(1, 1, -1), zero_state)
-    probs, prev_hs = decoder.decode(prev_hs, torch.tensor([vocab(starting_char)], device="cuda"))
+    probs, prev_hs = decoder.decode(prev_hs, torch.tensor([starting_char], device="cuda"))
 
     ll = torch.tensor(0, dtype=torch.float)
 

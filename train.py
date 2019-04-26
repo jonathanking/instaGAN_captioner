@@ -8,7 +8,7 @@ import pickle
 import csv
 from data_loader import get_loader, get_caption_loader
 from build_vocab import Vocabulary
-from model import EncoderRNN, EncoderCNN, DecoderRNN, DecoderRNNOld
+from model import EncoderRNN, EncoderCNN, DecoderRNN, DecoderRNNOld, generate_text
 from torch.nn.utils.rnn import pack_padded_sequence
 from torchvision import transforms
 import torchvision
@@ -143,15 +143,21 @@ def end_of_epoch_cleanup(i, epoch, total_step, loss, tgt_data, vocab, encoder, d
 
     if (epoch == 0 and i >= 4000 and i % args.print_cap_step == 0) or (epoch > 0 and i % args.print_cap_step == 0):
         with torch.no_grad():
-            # for idx in range(args.batch_size):
             idx = 0
             tgt_caption = get_caption_from_tensor(tgt_data[idx][:lengths[idx]].cpu().numpy(), vocab)
-            if args.pretrain_rnn:
+            t = np.exp(np.random.normal(.4, 0.2))
+            if args.pretrain_rnn and args.beam_search:
                 pred_caption, ll = decoder.beam_search_decode(features[idx], starting_char=tgt_data[idx][0])
-            else:
+            elif args.pretrain_rnn and not args.beam_search:
+                pred_caption, ll = generate_text(decoder, features[idx], vocab, temp=t, starting_char=tgt_data[idx][0])
+            elif not args.pretrain_rnn and args.beam_search:
                 pred_caption, ll = decoder.beam_search_decode(features[idx])
-            print("Target caption:", tgt_caption)
-            print("Predicted caption:", get_caption_from_tensor(pred_caption, vocab))
+            elif not args.pretrain_rnn and not args.beam_search:
+                pred_caption, ll = generate_text(decoder, features[idx], vocab, temp=t)
+
+            print("Target caption:", tgt_caption.replace("\t", "<>"))
+            print("Predicted caption:", get_caption_from_tensor(pred_caption, vocab).replace("\t", "<>"))
+            print("Temp = {0:4f}".format(t))
             print("log-likelihood:", ll.item() / len(pred_caption))
             if not args.pretrain_rnn:  # aka, 'if source is an image'
                 torchvision.utils.save_image(src_data[idx], "images/i{0}_{1}.png".format(i, idx))
@@ -228,6 +234,8 @@ if __name__ == '__main__':
                         help='train an rnn->rnn model to improve the decoderRNN\'s performance')
     parser.add_argument('--pretrain_caption_path', type=str, default='data/captions_en5_preprocessed.pt',
                         help='integer preprocessed captions for pretraining the rnn decoder')
+    parser.add_argument('--beam_search', action="store_true",
+                        help='use beam_search instead of multinomial sampling decoding')
 
     # Model parameters
     parser.add_argument('--embed_size', type=int, default=1024, help='dimension of word embedding vectors')
