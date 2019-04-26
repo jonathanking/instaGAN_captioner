@@ -25,7 +25,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 def get_encoder_decoder(vocab):
     """ Given the arguments, returns the correct combination of CNN/RNN/GAN encoders and decoders. """
     if args.pretrain_rnn:
-        encoder = EncoderRNN(len(vocab), args.embed_size, args.encoder_rnn_hidden_size).to(device)
+        encoder = EncoderRNN(len(vocab), args.embed_size, args.encoder_rnn_hidden_size, num_layers=args.num_layers).to(device)
     elif args.gan_embedding:
         gan = torch.load('DCGAN_embed_2.tch').to(device)
         encoder = gan.discriminator

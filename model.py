@@ -9,11 +9,11 @@ END = "\n"
 
 
 class EncoderRNN(nn.Module):
-    def __init__(self, vocab_size, embed_size, hidden_size):
+    def __init__(self, vocab_size, embed_size, hidden_size, num_layers):
         """Represents a simple RNN for generating an embedding of the entire input sequence"""
         super(EncoderRNN, self).__init__()
         self.embedding = nn.Embedding(vocab_size, embed_size)
-        self.rnn = nn.GRU(input_size=embed_size, hidden_size=hidden_size, num_layers=2)
+        self.rnn = nn.GRU(input_size=embed_size, hidden_size=hidden_size, num_layers=num_layers)
 
     def forward(self, inputs):
         """Extract feature vectors from input sequence."""
