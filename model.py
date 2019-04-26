@@ -20,8 +20,7 @@ class EncoderRNN(nn.Module):
         """Extract feature vectors from input sequence."""
         embedded = self.embedding(inputs.long())
         output, hidden = self.rnn(embedded)
-        return output[:,-1,:].squeeze()
-        # return output, hidden
+        return output[:, -1, :].squeeze()
 
 
 class EncoderCNN(nn.Module):

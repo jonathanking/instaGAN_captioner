@@ -64,7 +64,7 @@ def get_trainable_params(encoder, decoder):
     return params
 
 
-def main(args):
+def main():
     # Create model directory
     if not os.path.exists(args.model_path):
         os.makedirs(args.model_path)
@@ -111,8 +111,6 @@ def main(args):
             src_data = src_data.to(device)
             tgt_data = tgt_data.to(device)
             targets = pack_padded_sequence(tgt_data, lengths, batch_first=True)[0]
-
-            # loss = train_step(images, captions, gan.discriminator, decoder, optimizer, criterion)
 
             # Forward, backward and optimize
             if args.gan_embedding:
@@ -174,45 +172,6 @@ def end_of_epoch_cleanup(i, epoch, total_step, loss, tgt_data, vocab, encoder, d
                 args.model_path, 'encoder-{:08}-{:08}.ckpt'.format(starting_epoch + epoch + 1, starting_i + i + 1)))
 
 
-def train_step(input_tensor, target_tensor, encoder, decoder, optimizer, criterion, max_length=200):
-    """ Executes the encoding and decoding of the image. """
-    teacher_forcing_ratio = 0.5
-    target_length = target_tensor.size(0)
-    loss = 0
-
-    _, encoder_hidden = encoder(input_tensor) # aka embedded_img = encoder(images)
-
-    decoder_input = torch.zeros(1, 1, device='cuda', dtype=torch.long)
-
-    decoder_hidden = encoder_hidden
-
-    use_teacher_forcing = True if random.random() < teacher_forcing_ratio else False
-
-    if use_teacher_forcing:
-        # Teacher forcing: Feed the target as the next input
-        for di in range(target_length):
-            decoder_output, decoder_hidden = decoder(decoder_input, decoder_hidden)
-            loss += criterion(decoder_output, target_tensor[di])
-            decoder_input = target_tensor[di]  # Teacher forcing
-
-    else:
-        # Without teacher forcing: use its own predictions as the next input
-        for di in range(target_length):
-            decoder_output, decoder_hidden = decoder(decoder_input, decoder_hidden)
-            topv, topi = decoder_output.topk(1)
-            decoder_input = topi.squeeze().detach()  # detach from history as input
-
-            loss += criterion(decoder_output, target_tensor[di])
-            if decoder_input.item() == END:
-                break
-
-    loss.backward()
-
-    optimizer.step()
-
-    return loss.item() / target_length
-
-
 def get_caption_from_tensor(caption_tensor, vocab):
     """ Decodes a integer tensor caption using a defined vocabulary. """
     caption = "".join(map(vocab.decode, caption_tensor))
@@ -239,8 +198,8 @@ if __name__ == '__main__':
 
     # Model parameters
     parser.add_argument('--embed_size', type=int, default=1024, help='dimension of word embedding vectors')
-    parser.add_argument('--encoder_rnn_hidden_size', type=int, default=1024, help='dimension of lstm hidden states')
-    parser.add_argument('--decoder_rnn_hidden_size', type=int, default=512, help='dimension of lstm hidden states')
+    parser.add_argument('--encoder_rnn_hidden_size', type=int, default=1024, help='dimension of encoder hidden states')
+    parser.add_argument('--decoder_rnn_hidden_size', type=int, default=512, help='dimension of decoder hidden states')
     parser.add_argument('--num_layers', type=int, default=4, help='number of layers in lstm')
     parser.add_argument('--gan_embedding', action="store_true",
                         help='use a trained GAN to provide image embeddings for the RNN. Use ResNet otherwise.')
@@ -254,4 +213,4 @@ if __name__ == '__main__':
     if args.gan_embedding:
         assert args.embed_size == 1024, "RNN embedding size must match GAN embedding size of 1024."
     print(args)
-    main(args)
+    main()
