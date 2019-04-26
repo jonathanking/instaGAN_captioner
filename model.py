@@ -17,9 +17,10 @@ class EncoderRNN(nn.Module):
 
     def forward(self, inputs):
         """Extract feature vectors from input sequence."""
-        embedded = self.embedding(inputs)
+        embedded = self.embedding(inputs.long())
         output, hidden = self.rnn(embedded)
-        return output, hidden
+        return output[:,-1,:].squeeze()
+        # return output, hidden
 
 
 class EncoderCNN(nn.Module):
@@ -67,6 +68,7 @@ class DecoderRNNOld(nn.Module):
         self.vocab = vocab
         self.vocab_size = vocab_size
         self.hidden_size = hidden_size
+        self.num_layers = num_layers
         self.embed = nn.Embedding(vocab_size, embed_size)
         self.gru = nn.GRU(embed_size, hidden_size, num_layers, batch_first=True)
         self.output_layer = nn.Linear(hidden_size, vocab_size)
@@ -137,8 +139,14 @@ class DecoderRNNOld(nn.Module):
                 worst_idx = top_k_nlls.index(worst_val)
         return [candidates[j] for j in top_k_idxs]
 
-    def beam_search_decode(self, encodings, beam_width=5, max_length=100):
-        probs, prev_hs = self.decode(encodings.view(1,1,-1), torch.Tensor([self.vocab(START)]).cuda())
+    def beam_search_decode(self, encodings, beam_width=4, max_length=150, starting_char=None):
+        if not starting_char:
+            starting_char = self.vocab(START)
+        zero_state = torch.zeros(self.num_layers, 1, self.hidden_size, device="cuda")
+        outputs, prev_hs = self.gru.forward(encodings.view(1,1,-1), zero_state)
+        # probs = F.softmax(self.output_layer.forward(prev_hs[-1]))
+        # probs, prev_hs = self.decode(zero_state, torch.Tensor([self.vocab(START)]).cuda())
+        probs, prev_hs = self.decode(prev_hs, torch.Tensor([starting_char]).cuda())
         first_model_state = (probs, prev_hs)
         candidate_translations = [([], 0, first_model_state)]
         final_candidate_translations = []
