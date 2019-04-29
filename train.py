@@ -148,7 +148,7 @@ def end_of_epoch_cleanup(i, epoch, total_step, loss, tgt_data, vocab, encoder, d
     """ Execute bookkeeping methods such as printing the current epoch loss, example captions, and saving checkpts. """
     pred_caption_str = ""
     tgt_caption_str = ""
-    temp = 0
+    t = 0
     ll = 0
 
     if (epoch == 0 and i >= 0 and i % args.print_cap_step == 0) or (epoch > 0 and i % args.print_cap_step == 0):
@@ -179,7 +179,7 @@ def end_of_epoch_cleanup(i, epoch, total_step, loss, tgt_data, vocab, encoder, d
         print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, Perplexity: {:5.4f}'
               .format(epoch, args.num_epochs, i, total_step, loss.item(), np.exp(loss.item())))
         q = '“'
-        logger.writerow([epoch, i, loss.item(), np.exp(loss.item()), pred_caption_str, tgt_caption_str, ll, np.exp(ll), temp])
+        logger.writerow([epoch, i, loss.item(), np.exp(loss.item()), pred_caption_str, tgt_caption_str, ll, np.exp(ll), t])
 
     # Save the model checkpoints
     if (i + 1) % args.save_step == 0:
