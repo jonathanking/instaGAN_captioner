@@ -93,14 +93,6 @@ def main():
     with open(args.vocab_path, 'rb') as f:
         vocab = pickle.load(f)
 
-    # Build data loader
-    if args.pretrain_rnn:
-        data_loader = get_caption_loader(args.pretrain_caption_path, vocab, args.batch_size, shuffle=True,
-                                         num_workers=args.num_workers, seq_len=75, use_multiple_files=args.multiple_datasets)
-    else:
-        data_loader = get_loader(args.caption_path, args.image_path,  vocab, transform, args.batch_size, shuffle=True,
-                                 num_workers=args.num_workers)
-
     # Build the models
     encoder, decoder = get_encoder_decoder(vocab)
 
@@ -108,6 +100,15 @@ def main():
     starting_epoch, starting_i = 0, 0
     if args.resume and len(glob("models/" + args.resume + "/" + "*.ckpt")) > 0:
         encoder, decoder, starting_epoch, starting_i = load_model_weights(encoder, decoder)
+    print("Models built.", flush=True)
+
+    # Build data loader
+    if args.pretrain_rnn:
+        data_loader = get_caption_loader(args.pretrain_caption_path, vocab, args.batch_size, shuffle=True,
+                                         num_workers=args.num_workers, seq_len=75)
+    else:
+        data_loader = get_loader(args.caption_path, args.image_path,  vocab, transform, args.batch_size, shuffle=True,
+                                 num_workers=args.num_workers, use_multiple_files=args.multiple_datasets)
 
     # Loss and optimizer
     criterion = nn.CrossEntropyLoss()

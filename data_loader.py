@@ -19,7 +19,7 @@ def add_START_END(cap):
     return cap
 
 
-class InstgramDataset(data.Dataset):
+class InstagramDataset(data.Dataset):
     """Instagram Custom Dataset compatible with torch.utils.data.DataLoader."""
 
     def __init__(self, metadata_path, images_path, vocab, transform=None):
@@ -163,7 +163,7 @@ def get_loader(metadata_path, images_path, vocab, transform, batch_size, shuffle
     """Returns torch.utils.data.DataLoader for custom coco dataset."""
     if not use_multiple_files:
         # COCO caption dataset
-        insta = InstgramDataset(metadata_path=metadata_path,
+        insta = InstagramDataset(metadata_path=metadata_path,
                            images_path=images_path,
                            vocab=vocab,
                            transform=transform)
