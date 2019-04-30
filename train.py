@@ -8,12 +8,13 @@ import pickle
 import csv
 from data_loader import get_loader, get_caption_loader
 from build_vocab import Vocabulary
-from model import EncoderRNN, EncoderCNN, DecoderRNN, DecoderRNNOld, generate_text
+from model import EncoderRNN, EncoderCNN, DecoderRNN, DecoderRNNOld, generate_text, ProGANToRNN
 from torch.nn.utils.rnn import pack_padded_sequence
 from torchvision import transforms
 import torchvision
 from numpy import random
 from load_model import DCGAN, Discriminator, Generator
+import pro_gan_pytorch.PRO_GAN as pg
 
 START = 0
 END = 1
@@ -29,6 +30,14 @@ def get_encoder_decoder(vocab):
     elif args.gan_embedding:
         gan = torch.load('DCGAN_embed_2.tch').to(device)
         encoder = gan.discriminator
+    elif args.progan_embedding:
+        pro_gan = pg.ProGAN(depth=7, latent_size=256, device=torch.device('cuda'))
+        pro_gan.dis.load_state_dict(torch.load('progan_weights/GAN_DIS_6.pth'))
+        pro_gan.dis_optim.load_state_dict(torch.load('progan_weights/GAN_DIS_OPTIM_6.pth'))
+        pro_gan.gen.load_state_dict(torch.load('progan_weights/GAN_GEN_6.pth'))
+        pro_gan.gen_optim.load_state_dict(torch.load('progan_weights/GAN_GEN_OPTIM_6.pth'))
+        pro_gan.gen_shadow.load_state_dict(torch.load('progan_weights/GAN_GEN_SHADOW_6.pth'))
+        encoder = pro_gan.dis
     else:
         encoder = EncoderCNN(args.embed_size).to(device)
 
@@ -39,10 +48,12 @@ def get_encoder_decoder(vocab):
 def load_model_weights(encoder, decoder):
     """ Loads weights for encoder and decoder. Also returns epoch and iteration to resume at."""
     resume_path = "models/" + args.resume + "/"
+    # the encoder is a RNN
     if args.pretrain_rnn:
         encoder_file = sorted(glob(resume_path + "pretrain_rnn_encoder*.ckpt"))[-1]
         print("Loading", encoder_file)
         encoder.load_state_dict(torch.load(encoder_file))
+    # the encoder is a CNN and the CNN state has been saved before
     elif not args.gan_embedding and len(glob(resume_path + "encoder*.ckpt")) > 0:
         encoder_file = sorted(glob(resume_path + "encoder*.ckpt"))[-1]
         print("Loading", encoder_file)
@@ -55,12 +66,14 @@ def load_model_weights(encoder, decoder):
     return encoder, decoder, starting_epoch, starting_i
 
 
-def get_trainable_params(encoder, decoder):
+def get_trainable_params(encoder, decoder, enc2dec_transformation=None):
     """ Returns the parameters to train on based on the training configuration. """
     params = list(decoder.parameters())
+    if args.progan_embedding and enc2dec_transformation:
+        params += list(enc2dec_transformation.parameters())
     if args.pretrain_rnn:
         params += list(encoder.parameters())
-    elif not args.gan_embedding:
+    elif not args.gan_embedding and not args.progan_embedding:
         params += list(encoder.linear.parameters()) + list(encoder.bn.parameters())
     return params
 
@@ -95,6 +108,10 @@ def main():
 
     # Build the models
     encoder, decoder = get_encoder_decoder(vocab)
+    if args.progan_embedding:
+        linear_transformation = ProGANToRNN(args.embedding_size)
+    else:
+        linear_transformation = None
 
     # Resume model training if requested
     starting_epoch, starting_i = 0, 0
@@ -112,9 +129,8 @@ def main():
 
     # Loss and optimizer
     criterion = nn.CrossEntropyLoss()
-    params = get_trainable_params(encoder, decoder)
+    params = get_trainable_params(encoder, decoder, linear_transformation)
     optimizer = torch.optim.Adam(params, lr=args.learning_rate)
-
 
     # Train the models
     total_step = len(data_loader)
@@ -129,6 +145,9 @@ def main():
             # Forward, backward and optimize
             if args.gan_embedding:
                 disc, features = encoder(src_data)
+            elif args.progan_embedding:
+                disc, features = encoder(src_data)  # features is a 4096 len vector
+                features = linear_transformation(features)
             else:
                 features = encoder(src_data)
             outputs = decoder(features, tgt_data, lengths)
@@ -227,6 +246,8 @@ if __name__ == '__main__':
     parser.add_argument('--num_layers', type=int, default=4, help='number of layers in lstm')
     parser.add_argument('--gan_embedding', action="store_true",
                         help='use a trained GAN to provide image embeddings for the RNN. Use ResNet otherwise.')
+    parser.add_argument('--progan_embedding', action="store_true",
+                        help='use a trained proGAN to provide image embeddings for the RNN. Use ResNet otherwise.')
 
     parser.add_argument('--num_epochs', type=int, default=5)
     parser.add_argument('--batch_size', type=int, default=32)

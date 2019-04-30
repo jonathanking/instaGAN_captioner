@@ -42,6 +42,19 @@ class EncoderCNN(nn.Module):
         return features
 
 
+class ProGANToRNN(nn.Module):
+    def __init__(self, hidden_size):
+        """A simple linear layer to downsize the proGAN's embedding."""
+        super(ProGANToRNN, self).__init__()
+        self.linear = nn.Linear(4096, hidden_size)
+
+    def forward(self, features):
+        """Execute a downsizing linear transformation of the features from the proGAN to match the RNN's embedding
+            dimension."""
+        features = self.linear(features)
+        return features
+
+
 class DecoderRNN(nn.Module):
     def __init__(self, embed_size, hidden_size, output_size, num_layers):
         super(DecoderRNN, self).__init__()
