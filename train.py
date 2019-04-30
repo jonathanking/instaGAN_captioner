@@ -33,11 +33,11 @@ def get_encoder_decoder(vocab):
     elif args.progan_embedding:
         pro_gan = pg.ProGAN(depth=7, latent_size=256, device=torch.device('cuda'))
         pro_gan.dis.load_state_dict(torch.load('progan_weights/GAN_DIS_6.pth'))
-        pro_gan.dis_optim.load_state_dict(torch.load('progan_weights/GAN_DIS_OPTIM_6.pth'))
+        # pro_gan.dis_optim.load_state_dict(torch.load('progan_weights/GAN_DIS_OPTIM_6.pth'))
         pro_gan.gen.load_state_dict(torch.load('progan_weights/GAN_GEN_6.pth'))
-        pro_gan.gen_optim.load_state_dict(torch.load('progan_weights/GAN_GEN_OPTIM_6.pth'))
+        # pro_gan.gen_optim.load_state_dict(torch.load('progan_weights/GAN_GEN_OPTIM_6.pth'))
         pro_gan.gen_shadow.load_state_dict(torch.load('progan_weights/GAN_GEN_SHADOW_6.pth'))
-        encoder = pro_gan.dis
+        encoder = pro_gan.dis.to(device)
     else:
         encoder = EncoderCNN(args.embed_size).to(device)
 
@@ -109,7 +109,7 @@ def main():
     # Build the models
     encoder, decoder = get_encoder_decoder(vocab)
     if args.progan_embedding:
-        linear_transformation = ProGANToRNN(args.embedding_size)
+        linear_transformation = ProGANToRNN(args.embed_size).to(device)
     else:
         linear_transformation = None
 
@@ -129,8 +129,10 @@ def main():
 
     # Loss and optimizer
     criterion = nn.CrossEntropyLoss()
-    params = get_trainable_params(encoder, decoder, linear_transformation)
+    params = get_trainable_params(encoder, decoder, None)
     optimizer = torch.optim.Adam(params, lr=args.learning_rate)
+    if args.progan_embedding:
+        linear_transformation_optimizer = torch.optim.Adam(linear_transformation.parameters(), lr=args.learning_rate*100)
 
     # Train the models
     total_step = len(data_loader)
@@ -146,7 +148,8 @@ def main():
             if args.gan_embedding:
                 disc, features = encoder(src_data)
             elif args.progan_embedding:
-                disc, features = encoder(src_data)  # features is a 4096 len vector
+                # here, features is a 4096 len vector from the proGAN model's discriminator
+                disc, features = encoder(src_data, height=6, alpha=0.5, output_embeddings=True)
                 features = linear_transformation(features)
             else:
                 features = encoder(src_data)
@@ -157,6 +160,8 @@ def main():
                 encoder.zero_grad()
             loss.backward()
             optimizer.step()
+            if args.progan_embedding:
+                linear_transformation_optimizer.step()
 
             end_of_epoch_cleanup(i, epoch, total_step, loss, tgt_data, vocab, encoder, decoder, starting_i,
                                  starting_epoch, src_data, features, lengths, logger, imgdir)
@@ -225,8 +230,8 @@ if __name__ == '__main__':
     parser.add_argument('--model_path', type=str, default='models/' , help='path for saving trained models')
     parser.add_argument('--crop_size', type=int, default=224 , help='size for randomly cropping images')
     parser.add_argument('--vocab_path', type=str, default='data/vocab.pkl', help='path for vocabulary wrapper')
-    parser.add_argument('--image_path', type=str, default='data/train_data_1_eng.tch', help='path for resized images')
-    parser.add_argument('--caption_path', type=str, default='data/train_meta_1_eng.pkl', help='path for train captions')
+    parser.add_argument('--image_path', type=str, default='data/food_training_eng.tch', help='path for resized images')
+    parser.add_argument('--caption_path', type=str, default='data/food_training_meta_eng.pkl', help='path for train captions')
     parser.add_argument('--log_step', type=int , default=10, help='step size for prining log info')
     parser.add_argument('--save_step', type=int , default=1000, help='step size for saving trained models')
     parser.add_argument('--print_cap_step', type=int, default=100, help='step size for printing captions')
