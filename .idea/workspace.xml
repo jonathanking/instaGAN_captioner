@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a0bc144f-129d-4872-b337-e72b69cf33dc" name="Default" comment="Fix temp write out.">
+    <list default="true" id="a0bc144f-129d-4872-b337-e72b69cf33dc" name="Default" comment="Typo in InstagramDataset. Attempt to load modlels before data, in order&#10;to fail early.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data_loader.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_loader.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/train.py" afterDir="false" />
@@ -26,8 +26,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/train.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="738">
-                  <caret line="99" column="32" lean-forward="true" selection-start-line="99" selection-start-column="32" selection-end-line="99" selection-end-column="32" />
+                <state relative-caret-position="-237">
+                  <caret line="103" selection-start-line="103" selection-end-line="103" />
                   <folding>
                     <element signature="e#0#15#0" expanded="true" />
                   </folding>
@@ -214,11 +214,6 @@
               <item name="instaGAN_captioner" type="b2602c69:ProjectViewProjectNode" />
               <item name="instaGAN_captioner" type="462c0819:PsiDirectoryNode" />
               <item name="images" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="instaGAN_captioner" type="b2602c69:ProjectViewProjectNode" />
-              <item name="instaGAN_captioner" type="462c0819:PsiDirectoryNode" />
-              <item name="logs" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -436,7 +431,7 @@
       <workItem from="1555437252148" duration="1223000" />
       <workItem from="1555945628133" duration="53000" />
       <workItem from="1556048840734" duration="4472000" />
-      <workItem from="1556217953850" duration="39963000" />
+      <workItem from="1556217953850" duration="40194000" />
     </task>
     <task id="LOCAL-00001" summary="Added script to scrub non-english characters from training data.">
       <created>1555091913778</created>
@@ -624,10 +619,11 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="45711000" />
+    <option name="totallyTimeSpent" value="45942000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="992" y="66" width="2337" height="1266" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.20532984" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -714,7 +710,8 @@
     <MESSAGE value="Remove extraneous default value." />
     <MESSAGE value="Add in-depth support for logging (log file, arguments, print statements,&#10;images, etc.) resume argument must now include name of model to resume&#10;training from. generate_text now returns log prob." />
     <MESSAGE value="Fix temp write out." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix temp write out." />
+    <MESSAGE value="Typo in InstagramDataset. Attempt to load modlels before data, in order&#10;to fail early." />
+    <option name="LAST_COMMIT_MESSAGE" value="Typo in InstagramDataset. Attempt to load modlels before data, in order&#10;to fail early." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -919,8 +916,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="738">
-          <caret line="99" column="32" lean-forward="true" selection-start-line="99" selection-start-column="32" selection-end-line="99" selection-end-column="32" />
+        <state relative-caret-position="-237">
+          <caret line="103" selection-start-line="103" selection-end-line="103" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>
