@@ -159,13 +159,24 @@ def collate_fn_captions(data):
     return captions_src_mrg, captions_tgt_mrg, lengths
 
 
-def get_loader(metadata_path, images_path, vocab, transform, batch_size, shuffle, num_workers):
+def get_loader(metadata_path, images_path, vocab, transform, batch_size, shuffle, num_workers, use_multiple_files=False):
     """Returns torch.utils.data.DataLoader for custom coco dataset."""
-    # COCO caption dataset
-    insta = InstgramDataset(metadata_path=metadata_path,
-                       images_path=images_path,
-                       vocab=vocab,
-                       transform=transform)
+    if not use_multiple_files:
+        # COCO caption dataset
+        insta = InstgramDataset(metadata_path=metadata_path,
+                           images_path=images_path,
+                           vocab=vocab,
+                           transform=transform)
+    else:
+        metadata_files = ["data/food_training_meta_eng.pkl", "data/food_training_meta_2_eng.pkl",
+                          "data/food_training_meta_3_eng.pkl", "data/food_training_meta_4_eng.pkl"]
+        image_files = ["data/food_training_eng.tch", "data/food_training_2_eng.tch", 
+                       "data/food_training_3_eng.tch", "data/food_training_4_eng.tch"]
+        datasets = []
+        for mf, imf in zip(metadata_files, image_files):
+            datasets.append(InstagramDataset(metadata_path=mf, images_path=imf, vocab=vocab, transform=transform))
+        insta = torch.utils.data.ConcatDataset(datasets)
+        
     
     # Data loader for COCO dataset
     # This will return (images, captions, lengths) for each iteration.

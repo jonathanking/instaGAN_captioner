@@ -96,7 +96,7 @@ def main():
     # Build data loader
     if args.pretrain_rnn:
         data_loader = get_caption_loader(args.pretrain_caption_path, vocab, args.batch_size, shuffle=True,
-                                         num_workers=args.num_workers, seq_len=75)
+                                         num_workers=args.num_workers, seq_len=75, use_multiple_files=args.multiple_datasets)
     else:
         data_loader = get_loader(args.caption_path, args.image_path,  vocab, transform, args.batch_size, shuffle=True,
                                  num_workers=args.num_workers)
@@ -217,6 +217,7 @@ if __name__ == '__main__':
                         help='integer preprocessed captions for pretraining the rnn decoder')
     parser.add_argument('--beam_search', action="store_true",
                         help='use beam_search instead of multinomial sampling decoding')
+    parser.add_argument('--multiple_datasets', action="store_true", help="use multiple image/caption dataset files")
 
     # Model parameters
     parser.add_argument('--embed_size', type=int, default=512, help='dimension of word embedding vectors')
