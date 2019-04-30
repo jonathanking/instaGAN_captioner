@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a0bc144f-129d-4872-b337-e72b69cf33dc" name="Default" comment="Remove extraneous default value.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
+    <list default="true" id="a0bc144f-129d-4872-b337-e72b69cf33dc" name="Default" comment="Add in-depth support for logging (log file, arguments, print statements,&#10;images, etc.) resume argument must now include name of model to resume&#10;training from. generate_text now returns log prob.">
       <change beforePath="$PROJECT_DIR$/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/train.py" afterDir="false" />
     </list>
     <list id="5765aac3-ecdf-4631-9058-5f0e5c80cd29" name="idea" comment="idea" />
@@ -26,8 +24,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/train.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="360">
-                  <caret line="107" column="37" selection-start-line="107" selection-start-column="37" selection-end-line="107" selection-end-column="37" />
+                <state relative-caret-position="495">
+                  <caret line="79" column="29" lean-forward="true" selection-start-line="79" selection-start-column="29" selection-end-line="79" selection-end-column="29" />
                   <folding>
                     <element signature="e#0#15#0" expanded="true" />
                   </folding>
@@ -38,7 +36,7 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/model.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="420">
+                <state relative-caret-position="105">
                   <caret line="223" selection-start-line="223" selection-end-line="223" />
                   <folding>
                     <element signature="e#0#12#0" expanded="true" />
@@ -84,13 +82,25 @@
       </split-first>
       <split-second>
         <leaf>
-          <file pinned="false" current-in-tab="true">
+          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/model.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="690">
-                  <caret line="262" column="29" selection-start-line="262" selection-start-column="29" selection-end-line="262" selection-end-column="29" />
+                <state relative-caret-position="300">
+                  <caret line="236" selection-start-line="236" selection-end-line="236" />
                   <folding>
                     <element signature="e#0#12#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/scripts/remove_nonenglish_captions.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="1383">
+                  <caret line="140" lean-forward="true" selection-start-line="140" selection-end-line="140" />
+                  <folding>
+                    <element signature="e#25#47#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -153,8 +163,8 @@
       <find>add_star</find>
       <find>embedding</find>
       <find>embed</find>
-      <find>pretrain_caption</find>
       <find>add_st</find>
+      <find>pretrain_caption</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -210,7 +220,7 @@
             <path>
               <item name="instaGAN_captioner" type="b2602c69:ProjectViewProjectNode" />
               <item name="instaGAN_captioner" type="462c0819:PsiDirectoryNode" />
-              <item name="models" type="462c0819:PsiDirectoryNode" />
+              <item name="scripts" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -248,7 +258,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.train resume cnn">
+  <component name="RunManager" selected="Python.Remove Nonenglish">
     <configuration name="Remove Nonenglish" type="PythonConfigurationType" factoryName="Python">
       <module name="instaGAN_captioner" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -263,7 +273,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/scripts/remove_nonenglish_captions.py" />
-      <option name="PARAMETERS" value="$PROJECT_DIR$/data/train_meta_1.pkl $PROJECT_DIR$/data/train_data_1.tch" />
+      <option name="PARAMETERS" value="$PROJECT_DIR$/data/food_training_meta_4.pkl $PROJECT_DIR$/data/food_training_4.tch" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -428,7 +438,7 @@
       <workItem from="1555437252148" duration="1223000" />
       <workItem from="1555945628133" duration="53000" />
       <workItem from="1556048840734" duration="4472000" />
-      <workItem from="1556217953850" duration="30911000" />
+      <workItem from="1556217953850" duration="35352000" />
     </task>
     <task id="LOCAL-00001" summary="Added script to scrub non-english characters from training data.">
       <created>1555091913778</created>
@@ -598,22 +608,28 @@
       <option name="project" value="LOCAL" />
       <updated>1556309299049</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Add in-depth support for logging (log file, arguments, print statements,&#10;images, etc.) resume argument must now include name of model to resume&#10;training from. generate_text now returns log prob.">
+      <created>1556313795754</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1556313795754</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="36659000" />
+    <option name="totallyTimeSpent" value="41100000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="849" y="24" width="2562" height="1393" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1272872" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1272872" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32928804" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32903227" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32903227" />
       <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="4" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="5" />
@@ -691,7 +707,8 @@
     <MESSAGE value="Add argument to enable beam search if desired. Defaults to using &#10;multinomial decoding sampling." />
     <MESSAGE value="Delete unused code." />
     <MESSAGE value="Remove extraneous default value." />
-    <option name="LAST_COMMIT_MESSAGE" value="Remove extraneous default value." />
+    <MESSAGE value="Add in-depth support for logging (log file, arguments, print statements,&#10;images, etc.) resume argument must now include name of model to resume&#10;training from. generate_text now returns log prob." />
+    <option name="LAST_COMMIT_MESSAGE" value="Add in-depth support for logging (log file, arguments, print statements,&#10;images, etc.) resume argument must now include name of model to resume&#10;training from. generate_text now returns log prob." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -707,6 +724,7 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/instaGAN_captioner$train_do_not_resume_gan.coverage" NAME="train do not resume gan Coverage Results" MODIFIED="1556215831714" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/instaGAN_captioner$pretrain_rnn.coverage" NAME="pretrain rnn Coverage Results" MODIFIED="1556312548999" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/instaGAN_captioner$Remove_Nonenglish.coverage" NAME="Remove Nonenglish Coverage Results" MODIFIED="1556567587315" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts" />
     <SUITE FILE_PATH="coverage/instaGAN_captioner$train.coverage" NAME="train Coverage Results" MODIFIED="1556299895642" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/instaGAN_captioner$pretrain_rnn_resume.coverage" NAME="pretrain rnn resume Coverage Results" MODIFIED="1556305732822" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/instaGAN_captioner$train_resume_cnn.coverage" NAME="train resume cnn Coverage Results" MODIFIED="1556313099690" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
@@ -720,13 +738,6 @@
             <caret line="9" column="194" selection-start-line="9" selection-start-column="194" selection-end-line="9" selection-end-column="194" />
           </first_editor>
           <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/remove_nonenglish_captions.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="22" selection-start-line="2" selection-start-column="22" selection-end-line="2" selection-end-column="22" />
         </state>
       </provider>
     </entry>
@@ -848,8 +859,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/data_loader.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="461">
-          <caret line="79" selection-start-line="79" selection-end-line="79" />
+        <state relative-caret-position="1200">
+          <caret line="89" selection-start-line="89" selection-end-line="89" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
           </folding>
@@ -858,8 +869,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="223" selection-start-line="223" selection-end-line="223" />
+        <state relative-caret-position="300">
+          <caret line="236" selection-start-line="236" selection-end-line="236" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
           </folding>
@@ -868,10 +879,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="107" column="37" selection-start-line="107" selection-start-column="37" selection-end-line="107" selection-end-column="37" />
+        <state relative-caret-position="495">
+          <caret line="79" column="29" lean-forward="true" selection-start-line="79" selection-start-column="29" selection-end-line="79" selection-end-column="29" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/remove_nonenglish_captions.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1383">
+          <caret line="140" lean-forward="true" selection-start-line="140" selection-end-line="140" />
+          <folding>
+            <element signature="e#25#47#0" expanded="true" />
           </folding>
         </state>
       </provider>
