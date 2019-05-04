@@ -38,7 +38,10 @@ class EncoderCNN(nn.Module):
         with torch.no_grad():
             features = self.resnet(images)
         features = features.reshape(features.size(0), -1)
-        features = self.bn(self.linear(features))
+        if features.shape[0] != 1:
+            features = self.bn(self.linear(features))
+        else:
+            features = self.linear(features)
         return features
 
 
@@ -75,7 +78,7 @@ class DecoderRNN(nn.Module):
 
 
 class DecoderRNNOld(nn.Module):
-    def __init__(self, embed_size, hidden_size, vocab_size, num_layers, vocab, max_seq_length=400):
+    def __init__(self, embed_size, hidden_size, vocab_size, num_layers, vocab, max_seq_length=400, device='cuda'):
         """Set the hyper-parameters and build the layers."""
         super(DecoderRNNOld, self).__init__()
         self.vocab = vocab
@@ -86,6 +89,7 @@ class DecoderRNNOld(nn.Module):
         self.gru = nn.GRU(embed_size, hidden_size, num_layers, batch_first=True)
         self.output_layer = nn.Linear(hidden_size, vocab_size)
         self.max_seg_length = max_seq_length
+        self.device = device
         # self.input_layer = nn.Linear()
         
     def forward(self, features, captions, lengths):
@@ -153,19 +157,19 @@ class DecoderRNNOld(nn.Module):
                 worst_idx = top_k_nlls.index(worst_val)
         return [candidates[j] for j in top_k_idxs]
 
-    def beam_search_decode(self, encodings, beam_width=4, max_length=150, starting_char=None, randomize_prob=False):
+    def beam_search_decode(self, encodings, beam_width=4, max_length=50, starting_char=None, randomize_prob=False):
         if not starting_char:
             starting_char = self.vocab(START)
-        zero_state = torch.zeros(self.num_layers, 1, self.hidden_size, device="cuda")
+        zero_state = torch.zeros(self.num_layers, 1, self.hidden_size, device=self.device)
         outputs, prev_hs = self.gru.forward(encodings.view(1,1,-1), zero_state)
-        probs, prev_hs = self.decode(prev_hs, torch.Tensor([starting_char]).cuda())
+        probs, prev_hs = self.decode(prev_hs, torch.Tensor([starting_char]).to(device))
         first_model_state = (probs, prev_hs)
         candidate_translations = [([], 0, first_model_state)]
         final_candidate_translations = []
 
         def add_noise(p):
             """ Adds Gaussian noise to the probability to diversify outputs."""
-            random_prob = p - np.random.normal(0, 0.001)
+            random_prob = p - np.random.normal(0, 0.0005)
             if random_prob > 1:
                 random_prob = torch.tensor(1, dtype=torch.float, device="cuda")
             elif random_prob < 0:
@@ -248,10 +252,10 @@ def generate_text(decoder, encodings, vocab, starting_char=None, temp=1.4, decre
     # Higher temperatures results in more surprising text.
     temperature = temp
 
-    # Initialize decoder with encodings
-    zero_state = torch.zeros(decoder.num_layers, 1, decoder.hidden_size, device="cuda")
+    # Initialize decoder with encoding
+    zero_state = torch.zeros(decoder.num_layers, 1, decoder.hidden_size, device=decoder.device)
     outputs, prev_hs = decoder.gru.forward(encodings.view(1, 1, -1), zero_state)
-    probs, prev_hs = decoder.decode(prev_hs, torch.tensor([starting_char], device="cuda"))
+    probs, prev_hs = decoder.decode(prev_hs, torch.tensor([starting_char], device=decoder.device))
 
     ll = torch.tensor(0, dtype=torch.float)
 
@@ -267,7 +271,7 @@ def generate_text(decoder, encodings, vocab, starting_char=None, temp=1.4, decre
 
         # We pass the predicted word as the next input to the model
         # along with the previous hidden state
-        probs, prev_hs = decoder.decode(prev_hs, torch.tensor([char], device="cuda"))
+        probs, prev_hs = decoder.decode(prev_hs, torch.tensor([char], device=decoder.device))
 
         text_generated.append(char.item())
         if char.item() == vocab("\n"):
