@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import argparse
 import torch
 import torch.nn as nn
@@ -37,11 +38,12 @@ def get_encoder_decoder(vocab):
         pro_gan.gen.load_state_dict(torch.load('progan_weights/GAN_GEN_6.pth'))
         # pro_gan.gen_optim.load_state_dict(torch.load('progan_weights/GAN_GEN_OPTIM_6.pth'))
         pro_gan.gen_shadow.load_state_dict(torch.load('progan_weights/GAN_GEN_SHADOW_6.pth'))
+        print("Loaded proGAN weights.", flush=True)
         encoder = pro_gan.dis.to(device)
     else:
         encoder = EncoderCNN(args.embed_size).to(device)
 
-    decoder = DecoderRNNOld(args.embed_size, args.decoder_rnn_hidden_size, len(vocab), args.num_layers, vocab).to(device)
+    decoder = DecoderRNNOld(args.embed_size, args.decoder_rnn_hidden_size, len(vocab), args.num_layers, vocab, device=device).to(device)
     return encoder, decoder
 
 
@@ -123,8 +125,11 @@ def main():
     if args.pretrain_rnn:
         data_loader = get_caption_loader(args.pretrain_caption_path, vocab, args.batch_size, shuffle=True,
                                          num_workers=args.num_workers, seq_len=75)
-    else:
+    elif not args.eval_only:
         data_loader = get_loader(args.caption_path, args.image_path,  vocab, transform, args.batch_size, shuffle=True,
+                                 num_workers=args.num_workers, use_multiple_files=args.multiple_datasets)
+    elif args.eval_only:
+        data_loader = get_loader(args.test_caption_path, args.test_image_path,  vocab, transform, args.batch_size, shuffle=False,
                                  num_workers=args.num_workers, use_multiple_files=args.multiple_datasets)
 
     # Loss and optimizer
@@ -149,7 +154,7 @@ def main():
                 disc, features = encoder(src_data)
             elif args.progan_embedding:
                 # here, features is a 4096 len vector from the proGAN model's discriminator
-                disc, features = encoder(src_data, height=6, alpha=0.5, output_embeddings=True)
+                disc, features = encoder(x=src_data, height=6, alpha=0.5, output_embeddings=True)
                 features = linear_transformation(features)
             else:
                 features = encoder(src_data)
@@ -158,10 +163,11 @@ def main():
             decoder.zero_grad()
             if not args.gan_embedding:
                 encoder.zero_grad()
-            loss.backward()
-            optimizer.step()
-            if args.progan_embedding:
-                linear_transformation_optimizer.step()
+            if not args.eval_only:
+                loss.backward()
+                optimizer.step()
+                if args.progan_embedding:
+                    linear_transformation_optimizer.step()
 
             end_of_epoch_cleanup(i, epoch, total_step, loss, tgt_data, vocab, encoder, decoder, starting_i,
                                  starting_epoch, src_data, features, lengths, logger, imgdir)
@@ -175,18 +181,22 @@ def end_of_epoch_cleanup(i, epoch, total_step, loss, tgt_data, vocab, encoder, d
     tgt_caption_str = ""
     t = 0
     ll = 0
+    inv_normalize = transforms.Normalize(
+        mean=[-0.485/0.229, -0.456/0.224, -0.406/0.225],
+        std=[1/0.229, 1/0.224, 1/0.255])
+
 
     if (epoch == 0 and i >= 0 and i % args.print_cap_step == 0) or (epoch > 0 and i % args.print_cap_step == 0):
         with torch.no_grad():
             idx = 0
             tgt_caption = get_caption_from_tensor(tgt_data[idx][:lengths[idx]].cpu().numpy(), vocab)
-            t = np.exp(np.random.normal(.4, 0.2))
+            t = np.exp(np.random.normal(.3, 0.2))
             if args.pretrain_rnn and args.beam_search:
                 pred_caption, ll = decoder.beam_search_decode(features[idx], starting_char=tgt_data[idx][0])
             elif args.pretrain_rnn and not args.beam_search:
                 pred_caption, ll = generate_text(decoder, features[idx], vocab, temp=t, starting_char=tgt_data[idx][0])
             elif not args.pretrain_rnn and args.beam_search:
-                pred_caption, ll = decoder.beam_search_decode(features[idx])
+                pred_caption, ll = decoder.beam_search_decode(features[idx], randomize_prob=False)
             elif not args.pretrain_rnn and not args.beam_search:
                 pred_caption, ll = generate_text(decoder, features[idx], vocab, temp=t)
             pred_caption_str = get_caption_from_tensor(pred_caption, vocab).replace("\n", "")
@@ -196,8 +206,11 @@ def end_of_epoch_cleanup(i, epoch, total_step, loss, tgt_data, vocab, encoder, d
             print("Predicted caption:", pred_caption_str.strip())
             print("Temp = {0:4f}".format(t))
             print("log-likelihood:", ll / len(pred_caption))
+            if args.make_cap_files:
+                with open("logs/final_captions/{}.txt".format(i), "a") as f:
+                    f.write(pred_caption_str.strip().replace("\t", "\n") + "*"*30 + "\n")
             if not args.pretrain_rnn:  # aka, 'if source is an image'
-                torchvision.utils.save_image(src_data[idx], imgdir + "{0}_{1}.png".format(epoch, i))
+                torchvision.utils.save_image(inv_normalize(src_data[idx].to(device)), imgdir + "{0}_{1:03}.png".format(epoch, i))
 
     # Print log info
     if i % args.log_step == 0:
@@ -258,6 +271,11 @@ if __name__ == '__main__':
     parser.add_argument('--batch_size', type=int, default=32)
     parser.add_argument('--num_workers', type=int, default=4)
     parser.add_argument('--learning_rate', type=float, default=0.001)
+    parser.add_argument('--eval_only', action="store_true", help="evaluate the specified model on the test dataset")
+    parser.add_argument('--test_image_path', type=str, default='data/food_training_6_eng.tch', help='path for test images')
+    parser.add_argument('--test_caption_path', type=str, default='data/food_training_meta_6_eng.pkl',
+                        help='path for train captions')
+    parser.add_argument('--make_cap_files', action="store_true", help="when trying to caption images, it makes one file per image, with many captions in that file.")
     args = parser.parse_args()
 
     if args.gan_embedding:
